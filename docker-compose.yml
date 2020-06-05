@@ -1,0 +1,39 @@
+version: '3'
+services:
+    postgres:
+        container_name: postgres
+        image: postgres:alpine
+        environment:
+            POSTGRES_DB: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - "5432:5432"
+        restart: unless-stopped
+
+    shortr_go-echo:
+        build:
+            context: ./
+            dockerfile: ./go/echo/Dockerfile
+        container_name: shortr_go-echo
+        image: shortr_go-echo:latest
+        environment:
+            APP_PORT: 80
+            DATABASE_HOST: postgres
+            DATABASE_PORT: 5432
+            DATABASE_USER: postgres
+            DATABASE_PASSWORD: postgres
+            DATABASE_NAME: postgres
+        depends_on:
+            - postgres
+        links:
+            - postgres:postgres
+        ports:
+            - "80:80"
+        restart: unless-stopped 
+
+volumes:
+    postgres:
