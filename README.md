@@ -30,7 +30,7 @@ _**Note:** this is just a simple service to learn various languages and framewor
 See [`makefile`](makefile) for further commands.
 
 ## Overall Comparison
-These are not _good_ comparisons nor benchmarks, but gives a quick overlook at language and framework efficiency. The benchmarking tool used is [Apache's AB](https://httpd.apache.org/docs/2.4/programs/ab.html) with `ab -n 1000000 -k -c 30 -q http://localhost:80/benchmark`.
+These are not _good_ comparisons nor benchmarks, but gives a quick overview at language and framework efficiency. The benchmarking tool used is [Apache's AB](https://httpd.apache.org/docs/2.4/programs/ab.html) with `ab -n 1000000 -k -c 30 -q http://localhost:80/benchmark`.
 
 ### `GET CACHED` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>
 ### `GET` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>

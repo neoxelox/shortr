@@ -14,7 +14,7 @@ RUN go mod download
 
 COPY go/echo/ /build
 
-RUN go build -a -tags netgo -ldflags '-w -extldflags "-static"' -o shortr ./*.go
+RUN go build -a -tags netgo -ldflags '-w -extldflags "-static"' -o shortr ./main.go
 
 FROM alpine AS app
 
