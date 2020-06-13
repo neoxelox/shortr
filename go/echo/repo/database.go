@@ -8,8 +8,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-// Connect tries to connect to an specified database via the dsn connection string
-func Connect(ctx context.Context, dsn string, retries int) (*pgxpool.Pool, error) {
+func connect(ctx context.Context, dsn string, retries int) (*pgxpool.Pool, error) {
 	delay := time.NewTicker(1 * time.Second)
 	timeout := (time.Duration(retries) * time.Second)
 

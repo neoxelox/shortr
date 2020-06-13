@@ -9,10 +9,29 @@ services:
             POSTGRES_PASSWORD: postgres
             PGDATA: /data/postgres
         volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
             - postgres:/data/postgres
         ports:
             - "5432:5432"
-        restart: unless-stopped
+        restart: unless-stopped # Change for 'always' in production environment
+
+    # Use this ONLY in staging environment
+    pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin
+            PGADMIN_DEFAULT_PASSWORD: admin
+        volumes:
+            - ./servers.json:/pgadmin4/servers.json
+            - pgadmin:/root/.pgadmin
+        depends_on:
+            - postgres
+        links:
+            - postgres:postgres
+        ports:
+            - "5433:80"
+        restart: unless-stopped # Change for 'always' in production environment
 
     shortr_go-echo:
         build:
@@ -33,7 +52,10 @@ services:
             - postgres:postgres
         ports:
             - "80:80"
-        restart: unless-stopped 
+        restart: unless-stopped # Change for 'always' in production environment
 
 volumes:
+    init.sql:
     postgres:
+    servers.json:
+    pgadmin:

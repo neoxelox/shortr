@@ -27,7 +27,11 @@ _**Note:** this is just a simple service to learn various languages and framewor
     - [`docker-compose 1.21.0 >=`](https://docs.docker.com/compose/install/)
 - Run `make $language/$framework` ( for example `go/echo` )
 
+**_Important_** as all WS containers map to port 80, in order to run another language/framework run `make stop` and then `make $language/$framework`.
 See [`makefile`](makefile) for further commands.
+
+## Database
+The project uses the latest Postgres version available and automatically initializes a pgadmin4 instance [`localhost:5433`](localhost:5433) to navigate through the database. The default password is `postgres`.
 
 ## Overall Comparison
 These are not _good_ comparisons nor benchmarks, but gives a quick overview at language and framework efficiency. The benchmarking tool used is [Apache's AB](https://httpd.apache.org/docs/2.4/programs/ab.html) with `ab -n 1000000 -k -c 30 -q http://localhost:80/benchmark`.

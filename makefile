@@ -1,6 +1,6 @@
 up:
-	docker-compose up -d postgres
-.SILENT: start
+	docker-compose up -d postgres pgadmin
+.SILENT: up
 
 go/echo: up
 	docker-compose up -d --build shortr_go-echo
