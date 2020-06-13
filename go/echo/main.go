@@ -22,7 +22,7 @@ func getURL(ctx echo.Context) error {
 
 	if value, exists := urlCache.Read(name); exists {
 		go logIfErr(ctx, urlRepo.UpdateMetricsByName(name))
-		return ctx.Redirect(http.StatusMovedPermanently, value.(string))
+		return ctx.Redirect(http.StatusTemporaryRedirect, value.(string)) // HTTP CODE 307 IN ORDER NOT GET URLs CACHED
 	}
 
 	url, err := urlRepo.GetByName(name)
@@ -35,7 +35,7 @@ func getURL(ctx echo.Context) error {
 	go urlCache.Write(name, url)
 	go logIfErr(ctx, urlRepo.UpdateMetricsByName(name))
 
-	return ctx.Redirect(http.StatusMovedPermanently, url)
+	return ctx.Redirect(http.StatusTemporaryRedirect, url) // HTTP CODE 307 IN ORDER NOT GET URLs CACHED
 }
 
 func shortenURL(ctx echo.Context) error {
