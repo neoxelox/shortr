@@ -4,20 +4,22 @@ Simple url shortener in various languages and frameworks
 _**Note:** this is just a simple service to learn various languages and frameworks. Efficiency nor security or mantainabilty are intended in this project._
 
 ## Flows
-### `GET` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>
-### `POST` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>
-### `DELETE` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>
-### `PUT` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>
-### `GET` <span style="font-weight: normal; font-size: 0.8em;">/*/stats<span/>
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `POST` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `DELETE` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `PUT` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*/stats<span/>
 
 ## Languages
 - **Golang**
     - [Echo](go/echo/README.md)
 - **JavaScript**
-    - [Deno](js/deno/README.md)
     - [Express](js/express/README.md)
+- **TypeScript**
+    - [Deno](js/deno/README.md)
 - **Python**
-    - [Flask](py/flask/README.md)
+    - [FastApi](py/fastapi/README.md)
 - **Rust**
     - [Actix-Web](rs/actix/README.md)
 
@@ -33,11 +35,26 @@ See [`makefile`](makefile) for further commands.
 ## Database
 The project uses the latest Postgres version available and automatically initializes a pgadmin4 instance [`localhost:5433`](localhost:5433) to navigate through the database. The default password is `postgres`.
 
+## Model
+```yaml
+URL:
+    id:          integer
+    name:        string
+    url:         string
+    hits:        integer
+    last_hit_at: datetime
+    created_at:  datetime
+    modified_at: datetime
+```
+
 ## Overall Comparison
 These are not _good_ comparisons nor benchmarks, but gives a quick overview at language and framework efficiency. The benchmarking tool used is [Apache's AB](https://httpd.apache.org/docs/2.4/programs/ab.html) with `ab -n 1000000 -k -c 30 -q http://localhost:80/benchmark`.
 
-### `GET CACHED` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>
-### `GET` <span style="font-weight: normal; font-size: 0.8em;">/*<span/>
+### `GET CACHED` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+
+## Contribute
+Feel free to contribute to this project by adding more languages/frameworks, the only requirement is that it has to provide the minimum endpoints described above : ) .
 
 ## License
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - read the [LICENSE](LICENSE) file for details.

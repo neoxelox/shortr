@@ -11,8 +11,8 @@ services:
         volumes:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
             - postgres:/data/postgres
-        ports:
-            - "5432:5432"
+        expose:
+            - 5432
         restart: unless-stopped # Change for 'always' in production environment
 
     # Use this ONLY in staging environment
@@ -52,6 +52,7 @@ services:
             - postgres:postgres
         ports:
             - "80:80"
+            - "443:443"
         restart: unless-stopped # Change for 'always' in production environment
 
 volumes:
