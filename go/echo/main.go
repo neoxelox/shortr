@@ -6,6 +6,7 @@ import (
 	nurl "net/url"
 	"shortr/cache"
 	"shortr/config"
+	"shortr/render"
 	"shortr/repo"
 	"shortr/shortid"
 
@@ -120,8 +121,7 @@ func getURLStats(ctx echo.Context) error {
 	case echo.MIMEApplicationJSON:
 		return ctx.JSON(http.StatusOK, url)
 	default:
-		// TODO : RENDER PRETTY HTML IF Content-Type: text/html or default
-		return ctx.String(http.StatusOK, "Get URL stats endpoint!")
+		return ctx.Render(http.StatusOK, "stats.gts.html", url)
 	}
 }
 
@@ -139,11 +139,13 @@ func main() {
 	defer urlRepo.Disconnect()
 
 	app := echo.New()
+	app.Pre(middleware.RemoveTrailingSlash())
 	app.Use(middleware.Logger()) // TODO : Find another logger, this is too slow
 	app.HTTPErrorHandler = customHTTPErrorHandler
+	app.Renderer = render.New("/static/templates/*.gts.html")
 
 	// Routes
-	// app.Static("/", "/assets/index.html") // TODO : RENDER PRETTY HTML TO INTERACT WITH THE API
+	app.Static("/", "/static")
 	app.POST("/", shortenURL)
 	url := app.Group("/:name")
 	/*--*/ url.GET("", getURL)
@@ -161,14 +163,8 @@ func customHTTPErrorHandler(err error, ctx echo.Context) {
 		code = httpError.Code
 	}
 
-	switch code {
-	case http.StatusNotFound:
-		// TODO : 404 NOT FOUND PRETTY HTML
-		ctx.String(code, fmt.Sprintf("Interceptado: %d\n", code))
-	default:
-		// TODO : RENDER PRETTY HTML WHEN HTTP ERRORS
-		ctx.Echo().DefaultHTTPErrorHandler(err, ctx)
-	}
+	ctx.File(fmt.Sprintf("/static/templates/%d.html", code))
+	ctx.Echo().DefaultHTTPErrorHandler(err, ctx)
 }
 
 func wrap(vs ...interface{}) []interface{} {
