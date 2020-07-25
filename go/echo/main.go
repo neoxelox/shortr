@@ -26,9 +26,8 @@ func getURL(ctx echo.Context) error {
 
 	url, err := urlRepo.GetByName(name)
 	if err != nil {
-		// TODO : 404 NOT FOUND PRETTY HTML
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusNotFound)
+		return echo.ErrNotFound
 	}
 
 	go urlCache.Write(*url.Name, url.URL)
@@ -44,13 +43,13 @@ func shortenURL(ctx echo.Context) error {
 	_, err := nurl.ParseRequestURI(qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return echo.ErrBadRequest
 	}
 
 	url, err := urlRepo.Create(qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusInternalServerError)
+		return echo.ErrInternalServerError
 	}
 
 	if name == "" {
@@ -58,13 +57,13 @@ func shortenURL(ctx echo.Context) error {
 	}
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusInternalServerError)
+		return echo.ErrInternalServerError
 	}
 
 	url, err = urlRepo.UpdateNameByID(url.ID, name)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusInternalServerError)
+		return echo.ErrInternalServerError
 	}
 
 	return ctx.JSON(http.StatusOK, url)
@@ -76,7 +75,7 @@ func deleteURL(ctx echo.Context) error {
 	url, err := urlRepo.DeleteByName(name)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusNotFound)
+		return echo.ErrInternalServerError
 	}
 
 	urlCache.Remove(*url.Name)
@@ -91,13 +90,13 @@ func modifyURL(ctx echo.Context) error {
 	_, err := nurl.ParseRequestURI(qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return echo.ErrBadRequest
 	}
 
 	url, err := urlRepo.UpdateURLByName(name, qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusInternalServerError)
+		return echo.ErrInternalServerError
 	}
 
 	if _, exists := urlCache.Read(*url.Name); exists {
@@ -109,17 +108,16 @@ func modifyURL(ctx echo.Context) error {
 
 func getURLStats(ctx echo.Context) error {
 	name := ctx.Param("name")
-	contentType := ctx.Request().Header.Get("Content-Type")
+	contentType := ctx.Request().Header.Get(echo.HeaderContentType)
 
 	url, err := urlRepo.GetByName(name)
 	if err != nil {
-		// TODO : 404 NOT FOUND PRETTY HTML
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusNotFound)
+		return echo.ErrNotFound
 	}
 
 	switch contentType {
-	case "application/json":
+	case echo.MIMEApplicationJSON:
 		return ctx.JSON(http.StatusOK, url)
 	default:
 		// TODO : RENDER PRETTY HTML IF Content-Type: text/html or default
@@ -142,6 +140,7 @@ func main() {
 
 	app := echo.New()
 	app.Use(middleware.Logger()) // TODO : Find another logger, this is too slow
+	app.HTTPErrorHandler = customHTTPErrorHandler
 
 	// Routes
 	// app.Static("/", "/assets/index.html") // TODO : RENDER PRETTY HTML TO INTERACT WITH THE API
@@ -153,9 +152,23 @@ func main() {
 	/*--*/ url.PUT("", modifyURL)
 	/*--*/ url.GET("/stats", getURLStats)
 
-	// TODO : RENDER PRETTY HTML WHEN HTTP ERRORS
-
 	app.Logger.Fatal(app.Start(fmt.Sprintf(":%d", config.GetEnvAsInt("APP_PORT", 80))))
+}
+
+func customHTTPErrorHandler(err error, ctx echo.Context) {
+	code := http.StatusInternalServerError
+	if httpError, ok := err.(*echo.HTTPError); ok {
+		code = httpError.Code
+	}
+
+	switch code {
+	case http.StatusNotFound:
+		// TODO : 404 NOT FOUND PRETTY HTML
+		ctx.String(code, fmt.Sprintf("Interceptado: %d\n", code))
+	default:
+		// TODO : RENDER PRETTY HTML WHEN HTTP ERRORS
+		ctx.Echo().DefaultHTTPErrorHandler(err, ctx)
+	}
 }
 
 func wrap(vs ...interface{}) []interface{} {
