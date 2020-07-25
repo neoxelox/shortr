@@ -8,7 +8,6 @@ import (
 	"shortr/config"
 	"shortr/repo"
 	"shortr/shortid"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -20,118 +19,108 @@ var urlRepo *repo.Repo
 func getURL(ctx echo.Context) error {
 	name := ctx.Param("name")
 
-	if value, exists := urlCache.Read(name); exists {
-		go logIfErr(ctx, urlRepo.UpdateMetricsByName(name))
-		return ctx.Redirect(http.StatusTemporaryRedirect, value.(string)) // HTTP CODE 307 IN ORDER NOT GET URLs CACHED
+	if url, exists := urlCache.Read(name); exists {
+		go logIfErr(ctx, wrap(urlRepo.UpdateMetricsByName(name))...)
+		return ctx.Redirect(http.StatusTemporaryRedirect, url.(string)) // HTTP CODE 307 IN ORDER NOT TO GET URLs CACHED
 	}
 
 	url, err := urlRepo.GetByName(name)
 	if err != nil {
 		// TODO : 404 NOT FOUND PRETTY HTML
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return ctx.NoContent(http.StatusNotFound)
 	}
 
-	go urlCache.Write(name, url)
-	go logIfErr(ctx, urlRepo.UpdateMetricsByName(name))
+	go urlCache.Write(*url.Name, url.URL)
+	go logIfErr(ctx, wrap(urlRepo.UpdateMetricsByName(name))...)
 
-	return ctx.Redirect(http.StatusTemporaryRedirect, url) // HTTP CODE 307 IN ORDER NOT GET URLs CACHED
+	return ctx.Redirect(http.StatusTemporaryRedirect, url.URL) // HTTP CODE 307 IN ORDER NOT TO GET URLs CACHED
 }
 
 func shortenURL(ctx echo.Context) error {
 	name := ctx.Param("name")
-	url := ctx.QueryParam("url")
+	qurl := ctx.QueryParam("url")
 
-	_, err := nurl.ParseRequestURI(url)
+	_, err := nurl.ParseRequestURI(qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
 		return ctx.NoContent(http.StatusBadRequest)
 	}
 
-	id, err := urlRepo.Create(url)
+	url, err := urlRepo.Create(qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return ctx.NoContent(http.StatusInternalServerError)
 	}
 
 	if name == "" {
-		name, err = shortid.Encode(id)
+		name, err = shortid.Encode(url.ID)
 	}
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return ctx.NoContent(http.StatusInternalServerError)
 	}
 
-	err = urlRepo.UpdateNameByID(id, name)
+	url, err = urlRepo.UpdateNameByID(url.ID, name)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return ctx.NoContent(http.StatusInternalServerError)
 	}
 
-	return ctx.String(http.StatusOK, fmt.Sprintf("Created %s with %s\n", name, url))
+	return ctx.JSON(http.StatusOK, url)
 }
 
 func deleteURL(ctx echo.Context) error {
 	name := ctx.Param("name")
 
-	err := urlRepo.DeleteByName(name)
+	url, err := urlRepo.DeleteByName(name)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return ctx.NoContent(http.StatusNotFound)
 	}
 
-	urlCache.Remove(name)
+	urlCache.Remove(*url.Name)
 
-	return ctx.String(http.StatusOK, fmt.Sprintf("Deleted %s\n", name))
+	return ctx.JSON(http.StatusOK, url)
 }
 
 func modifyURL(ctx echo.Context) error {
 	name := ctx.Param("name")
-	url := ctx.QueryParam("url")
+	qurl := ctx.QueryParam("url")
 
-	_, err := nurl.ParseRequestURI(url)
+	_, err := nurl.ParseRequestURI(qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
 		return ctx.NoContent(http.StatusBadRequest)
 	}
 
-	err = urlRepo.UpdateURLByName(name, url)
+	url, err := urlRepo.UpdateURLByName(name, qurl)
 	if err != nil {
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return ctx.NoContent(http.StatusInternalServerError)
 	}
 
-	if _, exists := urlCache.Read(name); exists {
-		urlCache.Write(name, url)
+	if _, exists := urlCache.Read(*url.Name); exists {
+		urlCache.Write(*url.Name, url.URL)
 	}
 
-	return ctx.String(http.StatusOK, fmt.Sprintf("Updated %s to %s\n", name, url))
+	return ctx.JSON(http.StatusOK, url)
 }
 
 func getURLStats(ctx echo.Context) error {
 	name := ctx.Param("name")
 	contentType := ctx.Request().Header.Get("Content-Type")
 
-	hits, lastHitAt, createdAt, modifiedAt, err := urlRepo.GetMetricsByName(name)
+	url, err := urlRepo.GetByName(name)
 	if err != nil {
 		// TODO : 404 NOT FOUND PRETTY HTML
 		ctx.Logger().Error(err)
-		return ctx.NoContent(http.StatusBadRequest)
+		return ctx.NoContent(http.StatusNotFound)
 	}
 
 	switch contentType {
 	case "application/json":
-		var response struct {
-			Hits       int        `json:"hits"`
-			LastHitAt  *time.Time `json:"last_hit_at"`
-			CreatedAt  time.Time  `json:"created_at"`
-			ModifiedAt time.Time  `json:"modified_at"`
-		}
-		response.Hits = hits
-		response.LastHitAt = lastHitAt
-		response.CreatedAt = createdAt
-		response.ModifiedAt = modifiedAt
-		return ctx.JSONPretty(http.StatusOK, response, "  ")
+		return ctx.JSON(http.StatusOK, url)
 	default:
 		// TODO : RENDER PRETTY HTML IF Content-Type: text/html or default
 		return ctx.String(http.StatusOK, "Get URL stats endpoint!")
@@ -164,12 +153,23 @@ func main() {
 	/*--*/ url.PUT("", modifyURL)
 	/*--*/ url.GET("/stats", getURLStats)
 
-	// TODO : RENDER PRETTY HTML WHEN ERROR
+	// TODO : RENDER PRETTY HTML WHEN HTTP ERRORS
 
 	app.Logger.Fatal(app.Start(fmt.Sprintf(":%d", config.GetEnvAsInt("APP_PORT", 80))))
 }
 
-func logIfErr(ctx echo.Context, err error) {
+func wrap(vs ...interface{}) []interface{} {
+	return vs
+}
+
+func logIfErr(ctx echo.Context, i ...interface{}) {
+	var err error = nil
+	for _, o := range i {
+		switch t := o.(type) {
+		case error:
+			err = t
+		}
+	}
 	if err != nil {
 		ctx.Logger().Error(err)
 	}

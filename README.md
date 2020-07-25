@@ -33,7 +33,7 @@ _**Note:** this is just a simple service to learn various languages and framewor
 See [`makefile`](makefile) for further commands.
 
 ## Database
-The project uses the latest Postgres version available and automatically initializes a pgadmin4 instance [`localhost:5433`](http://localhost:5433) to navigate through the database. The server group is called `URLs` and the default password is `postgres`.
+The project uses the latest Postgres version available and automatically initializes a pgadmin4 instance [`localhost:5433`](http://localhost:5433) to navigate through the database. Default user and password is `admin`. The server group is called `URLs` and the default database password is `postgres`.
 
 ## Model
 ```yaml
