@@ -4,6 +4,7 @@
 ### Own ###
 notes.md
 flows.drawio
+shortr.gvdesign
 *.env
 
 ### Flask ###

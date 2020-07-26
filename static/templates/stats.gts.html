@@ -4,18 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
-    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="864x864">
-    <title>Shortr</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="192x192">
+    <link rel="stylesheet" href="/styles/main.css">
+    <title>{{.Scope.Name}} | Shortr</title>
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="{{.AppScheme}}://{{.AppHost}}/{{.Scope.Name}}">
+    <meta name="twitter:title" content="📊 Real time stats for /{{.Scope.Name}}">
+    <meta name="twitter:description" content="🔄 Hits: {{.Scope.Hits}} | 🕒 Last hit at: {{.Scope.LastHitAt}}">
+    <meta name="twitter:image" content="{{.AppScheme}}://{{.AppHost}}/images/banner.png">
+    <!-- Open Graph -->
+    <meta property="og:type" content="summary">
+    <meta property="og:url" content="{{.AppScheme}}://{{.AppHost}}/{{.Scope.Name}}">
+    <meta property="og:site_name" content="Shortr">
+    <meta property="og:title" content="📊 Real time stats for /{{.Scope.Name}}">
+    <meta property="og:description" content="🔄 Hits: {{.Scope.Hits}} | 🕒 Last hit at: {{.Scope.LastHitAt}}">
+    <meta property="og:image" content="{{.AppScheme}}://{{.AppHost}}/images/banner.png">
 </head>
 <body>
     <ul>
-        <li>ID: {{.ID}}</li>
-        <li>Name: {{.Name}}</li>
-        <li>URL: {{.URL}}</li>
-        <li>Hits: {{.Hits}}</li>
-        <li>Last hit at: {{.LastHitAt}}</li>
-        <li>Created at: {{.CreatedAt}}</li>
-        <li>Modified at: {{.ModifiedAt}}</li>
+        <li>ID: {{.Scope.ID}}</li>
+        <li>Name: {{.Scope.Name}}</li>
+        <li>URL: {{.Scope.URL}}</li>
+        <li>Hits: {{.Scope.Hits}}</li>
+        <li>Last hit at: {{.Scope.LastHitAt}}</li>
+        <li>Created at: {{.Scope.CreatedAt}}</li>
+        <li>Modified at: {{.Scope.ModifiedAt}}</li>
     </ul>    
 </body>
 </html>

@@ -1,8 +1,9 @@
 package render
 
 import (
+	"html/template"
 	"io"
-	"text/template"
+	"shortr/config"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,7 +20,24 @@ func New(templates string) *Renderer {
 	}
 }
 
+type context struct {
+	AppPort   int
+	AppHost   string
+	AppScheme string
+	Scope     interface{}
+}
+
 // Render implements the standard render interface
 func (r *Renderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return r.templates.ExecuteTemplate(w, name, data)
+	scheme := "http"
+	if config.GetEnvAsBool("APP_SSL_ENABLED", false) {
+		scheme = "https"
+	}
+	ctx := &context{
+		AppPort:   config.GetEnvAsInt("APP_PORT", 80),
+		AppHost:   config.GetEnvAsString("APP_HOST", "localhost"),
+		AppScheme: scheme,
+		Scope:     data,
+	}
+	return r.templates.ExecuteTemplate(w, name, ctx)
 }
