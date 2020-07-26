@@ -7,6 +7,10 @@
     <link rel="icon" type="image/png" href="/images/favicon.png" sizes="192x192">
     <link rel="stylesheet" href="/styles/main.css">
     <title>Shortr</title>
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> -->
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Shortr 🏠">
@@ -19,7 +23,17 @@
     <meta property="og:description" content="Short it! 🚀">
     <meta property="og:image" content="https://raw.githubusercontent.com/Neoxelox/shortr/master/static/images/banner.png">
 </head>
-<body>
-    HOME!
+<body class="background center">
+    <div class="container">
+        <object class="logo" data="/images/loading-logo.svg" type="image/svg+xml" alt="Shortr logo">
+            <img class="logo" src="/images/logo.png" alt="Shortr logo">
+        </object>
+        <h1 class="title">HOME</h1>
+        <h2 class="subtitle">IN PROGRESS</h2>
+        <div id="app">
+        </div>
+    </div>
+
+    <script src="/scripts/app.js"></script>
 </body>
 </html>

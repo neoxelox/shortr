@@ -75,7 +75,6 @@ body, html {
     }
 
     .subtitle {
-        margin-bottom: 0px;
         font-size: 0px;
         font-weight: 400;
         color: $secondary-font-color;
@@ -84,18 +83,19 @@ body, html {
 
     @keyframes expand-subtitle {
         to {
-            margin-bottom: 25px;
             font-size: 32px;
         }
     }
 
     ul {
+        margin-top: 0px;
         text-decoration: none;
         text-emphasis: none;
         list-style-type: none;
         display: flex;
         flex-flow: column;
         width: 120%;
+        animation: expand-ul 1.5s ease forwards 1.5s;
 
         li {
             display: flex;
@@ -105,6 +105,12 @@ body, html {
             span:first-child {
                 color: $primary-font-color;
             }
+        }
+    }
+
+    @keyframes expand-ul {
+        to {
+            margin-top: 25px;
         }
     }
 

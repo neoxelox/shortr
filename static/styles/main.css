@@ -92,7 +92,6 @@ body, html {
 }
 
 .container .subtitle {
-  margin-bottom: 0px;
   font-size: 0px;
   font-weight: 400;
   color: #4e4a67;
@@ -102,19 +101,18 @@ body, html {
 
 @-webkit-keyframes expand-subtitle {
   to {
-    margin-bottom: 25px;
     font-size: 32px;
   }
 }
 
 @keyframes expand-subtitle {
   to {
-    margin-bottom: 25px;
     font-size: 32px;
   }
 }
 
 .container ul {
+  margin-top: 0px;
   text-decoration: none;
   -webkit-text-emphasis: none;
           text-emphasis: none;
@@ -127,6 +125,8 @@ body, html {
       -ms-flex-flow: column;
           flex-flow: column;
   width: 120%;
+  -webkit-animation: expand-ul 1.5s ease forwards 1.5s;
+          animation: expand-ul 1.5s ease forwards 1.5s;
 }
 
 .container ul li {
@@ -144,6 +144,18 @@ body, html {
 
 .container ul li span:first-child {
   color: #0d0925;
+}
+
+@-webkit-keyframes expand-ul {
+  to {
+    margin-top: 25px;
+  }
+}
+
+@keyframes expand-ul {
+  to {
+    margin-top: 25px;
+  }
 }
 
 .container .text {
