@@ -102,14 +102,14 @@ body, html {
 
 @-webkit-keyframes expand-subtitle {
   to {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-size: 32px;
   }
 }
 
 @keyframes expand-subtitle {
   to {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-size: 32px;
   }
 }
@@ -144,7 +144,6 @@ body, html {
 
 .container ul li span:first-child {
   color: #0d0925;
-  margin-right: 25px;
 }
 
 .container .text {
