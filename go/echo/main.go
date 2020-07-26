@@ -118,7 +118,7 @@ func getURLStats(ctx echo.Context) error {
 	}
 
 	switch contentType {
-	case echo.MIMEApplicationJSON:
+	case echo.MIMEApplicationJSON, echo.MIMEApplicationJSONCharsetUTF8:
 		return ctx.JSON(http.StatusOK, url)
 	default:
 		return ctx.Render(http.StatusOK, "stats.gts.html", url)
@@ -163,6 +163,12 @@ func customHTTPErrorHandler(err error, ctx echo.Context) {
 		code = httpError.Code
 	}
 
+	contentType := ctx.Request().Header.Get(echo.HeaderContentType)
+	switch contentType {
+	case echo.MIMEApplicationJSON, echo.MIMEApplicationJSONCharsetUTF8:
+		ctx.Echo().DefaultHTTPErrorHandler(err, ctx)
+		return
+	}
 	ctx.File(fmt.Sprintf("/static/templates/%d.html", code))
 	ctx.Echo().DefaultHTTPErrorHandler(err, ctx)
 }
