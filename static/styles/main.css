@@ -1,4 +1,169 @@
-body {
-  background-color: #ffffff;
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+  font-family: "Fira Sans", sans-serif, Helvetica, Arial;
+  color: #0d0925;
+  text-align: center;
+  text-decoration: none;
+  scroll-behavior: smooth;
+}
+
+body, html {
+  height: 100%;
+  min-height: 100vh;
+}
+
+.background {
+  background-color: #21D4FD;
+  background-image: linear-gradient(19deg, #21D4FD 0%, #B721FF 100%);
+}
+
+.center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.container {
+  background-color: #f5f5f5;
+  -webkit-box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+          box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  border-radius: 25px;
+  max-width: auto;
+  max-height: auto;
+  padding: 40px 80px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  overflow: hidden;
+}
+
+.container .logo {
+  width: 146px;
+  height: 165px;
+}
+
+.container a h1:hover {
+  color: #B721FF;
+  -webkit-transition: color 0.25s;
+  transition: color 0.25s;
+}
+
+.container .title {
+  margin-top: 0px;
+  font-size: 0px;
+  font-weight: 700;
+  color: #0d0925;
+  -webkit-animation: expand-title 1.5s ease forwards 1.5s;
+          animation: expand-title 1.5s ease forwards 1.5s;
+}
+
+@-webkit-keyframes expand-title {
+  to {
+    margin-top: 20px;
+    font-size: 48px;
+  }
+}
+
+@keyframes expand-title {
+  to {
+    margin-top: 20px;
+    font-size: 48px;
+  }
+}
+
+.container .subtitle {
+  margin-bottom: 0px;
+  font-size: 0px;
+  font-weight: 400;
+  color: #4e4a67;
+  -webkit-animation: expand-subtitle 1.5s ease forwards 1.5s;
+          animation: expand-subtitle 1.5s ease forwards 1.5s;
+}
+
+@-webkit-keyframes expand-subtitle {
+  to {
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+}
+
+@keyframes expand-subtitle {
+  to {
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+}
+
+.container ul {
+  text-decoration: none;
+  -webkit-text-emphasis: none;
+          text-emphasis: none;
+  list-style-type: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  width: 120%;
+}
+
+.container ul li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.container ul li span:first-child {
+  color: #0d0925;
+  margin-right: 25px;
+}
+
+.container .text {
+  font-size: 0px;
+  font-weight: 400;
+  color: #4e4a67;
+  -webkit-animation: expand-text 1.5s ease forwards 1.5s;
+          animation: expand-text 1.5s ease forwards 1.5s;
+}
+
+@-webkit-keyframes expand-text {
+  to {
+    font-size: 16px;
+  }
+}
+
+@keyframes expand-text {
+  to {
+    font-size: 16px;
+  }
 }
 /*# sourceMappingURL=main.css.map */

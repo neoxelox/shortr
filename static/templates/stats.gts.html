@@ -21,15 +21,19 @@
     <meta property="og:description" content="🔄 Hits: {{.Scope.Hits}} | 🕒 Last hit at: {{.Scope.LastHitAt}}">
     <meta property="og:image" content="{{.AppScheme}}://{{.AppHost}}/images/banner.png">
 </head>
-<body>
-    <ul>
-        <li>ID: {{.Scope.ID}}</li>
-        <li>Name: {{.Scope.Name}}</li>
-        <li>URL: {{.Scope.URL}}</li>
-        <li>Hits: {{.Scope.Hits}}</li>
-        <li>Last hit at: {{.Scope.LastHitAt}}</li>
-        <li>Created at: {{.Scope.CreatedAt}}</li>
-        <li>Modified at: {{.Scope.ModifiedAt}}</li>
-    </ul>    
+<body class="background center">
+    <div class="container">
+        <object class="logo" data="/images/loading-logo.svg" type="image/svg+xml" alt="Shortr logo">
+            <img class="logo" src="/images/logo.png" alt="Shortr logo">
+        </object>
+        <a href="/{{.Scope.Name}}"><h1 class="title">{{.Scope.Name}}</h1></a>
+        <h2 class="subtitle" title="{{.Scope.URL}}">{{if lt (len .Scope.URL) 20}} {{.Scope.URL}} {{else}} {{printf "%.20s..." .Scope.URL}} {{end}}</h2>
+        <ul>
+            <li><span class="text">Hits</span><span class="text">{{.Scope.Hits}}</span></li>
+            <li><span class="text">Last hit at</span><span class="text">{{if .Scope.LastHitAt}} {{.Scope.LastHitAt.Format "Mon, 02 Jan 2006 15:04"}} {{else}} Never {{end}}</span></li>
+            <li><span class="text">Created at</span><span class="text">{{.Scope.CreatedAt.Format "Mon, 02 Jan 2006 15:04"}}</span></li>
+            <li><span class="text">Modified at</span><span class="text">{{.Scope.ModifiedAt.Format "Mon, 02 Jan 2006 15:04"}}</span></li>
+        </ul>
+    </div>
 </body>
 </html>
