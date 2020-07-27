@@ -77,6 +77,10 @@ body, html {
           animation: expand-title 1.5s ease forwards 1.5s;
 }
 
+.container .title.error {
+  color: #D32F2F;
+}
+
 @-webkit-keyframes expand-title {
   to {
     margin-top: 20px;
@@ -97,6 +101,10 @@ body, html {
   color: #4e4a67;
   -webkit-animation: expand-subtitle 1.5s ease forwards 1.5s;
           animation: expand-subtitle 1.5s ease forwards 1.5s;
+}
+
+.container .subtitle.error {
+  color: #d74444;
 }
 
 @-webkit-keyframes expand-subtitle {
@@ -176,5 +184,110 @@ body, html {
   to {
     font-size: 16px;
   }
+}
+
+.container input {
+  cursor: text;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: #B721FF;
+  background-color: #f5f5f5;
+  -webkit-box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+          box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+}
+
+.container button {
+  cursor: pointer;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: #f5f5f5;
+  background-color: #B721FF;
+  -webkit-box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+          box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+}
+
+.container .primary-color {
+  background-color: #B721FF;
+}
+
+.container .primary-color:hover {
+  background-color: #f1d4ff;
+  color: #B721FF;
+  -webkit-transition: background-color 0.25s, color 0.25s;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.container .success-color {
+  background-color: #5eac61;
+}
+
+.container .success-color:hover {
+  background-color: #c3e0c4;
+  color: #5eac61;
+  -webkit-transition: background-color 0.25s, color 0.25s;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.container .danger-color {
+  background-color: #D32F2F;
+}
+
+.container .danger-color:hover {
+  background-color: #f2c2c2;
+  color: #D32F2F;
+  -webkit-transition: background-color 0.25s, color 0.25s;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.container .request {
+  margin-top: 30px;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.container .request input:first-child {
+  margin-bottom: 10px;
+}
+
+.container .request input:nth-child(2) {
+  margin-bottom: 10px;
+}
+
+.container .request .buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.container .request .buttons button:first-child {
+  margin-right: 10px;
+}
+
+.container .request .buttons button:last-child {
+  margin-left: 10px;
 }
 /*# sourceMappingURL=main.css.map */

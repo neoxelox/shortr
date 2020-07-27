@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="/styles/main.css">
     <title>Shortr</title>
     <!-- Vue -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- development version, optimized for debuging -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
     <!-- production version, optimized for size and speed -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Shortr 🏠">
@@ -28,12 +29,34 @@
         <object class="logo" data="/images/loading-logo.svg" type="image/svg+xml" alt="Shortr logo">
             <img class="logo" src="/images/logo.png" alt="Shortr logo">
         </object>
-        <h1 class="title">HOME</h1>
-        <h2 class="subtitle">IN PROGRESS</h2>
         <div id="app">
+            <div class="request">
+                <input type="text" v-model="url" placeholder="🚀 Enter a long url">
+                <input type="text" v-model="name" placeholder="💭 Type a name or leave it random">
+                <div class="buttons">
+                    <button v-on:click="createURL(url, name)" title="Create an URL" class="primary-color">CREATE</button>
+                    <button v-on:click="updateURL(url, name)" title="Update an URL" class="success-color">UPDATE</button>
+                    <button v-on:click="deleteURL(name)" title="Delete an URL" class="danger-color">DELETE</button>
+                </div>
+            </div>
+            <div class="response">
+                <div v-if="ERROR">
+                    <h1 class="title error">{{ERROR.code}}</h1>
+                    <h2 class="subtitle error">{{ERROR.message}}</h2>
+                </div>
+                <div class="sucess" v-else-if="URL">
+                    <a v-bind:href="'/'+URL.name"><h1 class="title">{{URL.name | trim}}</h1></a>
+                    <h2 class="subtitle" v-bind:title="URL.url">{{URL.url | trim}}</h2>
+                    <ul style="width: 100%;">
+                        <li><span class="text">👉 Hits</span><span class="text">{{URL.hits}}</span></li>
+                        <li><span class="text">🕒 Last hit</span><span class="text">{{URL.last_hit_at ? $options.filters.formatDate(URL.last_hit_at) : "Never"}}</span></li>
+                        <li><span class="text">🕒 Created</span><span class="text">{{URL.created_at | formatDate}}</span></li>
+                        <li><span class="text">🕒 Modified</span><span class="text">{{URL.modified_at | formatDate}}</span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-
     <script src="/scripts/app.js"></script>
 </body>
 </html>

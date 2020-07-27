@@ -1,6 +1,8 @@
 // Variables
 $primary-font-color: #0d0925;
 $secondary-font-color: #4e4a67;
+$danger-font-color: #D32F2F;
+$success-font-color: #5eac61;
 $primary-back-color: #f5f5f5;
 $primay-background-color: #21D4FD;
 $primary-background-image: linear-gradient(19deg, #21D4FD 0%, #B721FF 100%);
@@ -65,6 +67,10 @@ body, html {
         font-weight: 700;
         color: $primary-font-color;
         animation: expand-title 1.5s ease forwards 1.5s;
+
+        &.error {
+            color: $danger-font-color;
+        }
     }
 
     @keyframes expand-title {
@@ -79,6 +85,10 @@ body, html {
         font-weight: 400;
         color: $secondary-font-color;
         animation: expand-subtitle 1.5s ease forwards 1.5s;
+
+        &.error {
+            color: lighten($color: $danger-font-color, $amount: 5);
+        }
     }
 
     @keyframes expand-subtitle {
@@ -124,6 +134,92 @@ body, html {
     @keyframes expand-text {
         to {
             font-size: 16px;
+        }
+    }
+
+    input {
+        cursor: text;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 700;
+        color: #B721FF;
+        background-color: $primary-back-color;
+        box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+    }
+
+    button {
+        cursor: pointer;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 700;
+        color: $primary-back-color;
+        background-color: #B721FF;
+        box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+    }
+
+    .primary-color {
+        background-color: #B721FF;
+
+        &:hover {
+            background-color: lighten($color: #B721FF, $amount: 35);
+            color: #B721FF;
+            transition: background-color 0.25s, color 0.25s; 
+        }
+    }
+
+    .success-color {
+        background-color: $success-font-color;
+
+        &:hover {
+            background-color: lighten($color: $success-font-color, $amount: 30);
+            color: $success-font-color;
+            transition: background-color 0.25s, color 0.25s; 
+        }
+    }
+
+    .danger-color {
+        background-color: $danger-font-color;
+
+        &:hover {
+            background-color: lighten($color: $danger-font-color, $amount: 35);
+            color: $danger-font-color;
+            transition: background-color 0.25s, color 0.25s; 
+        }
+    }
+
+    .request {
+        margin-top: 30px;
+        width: 100%;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+
+        input:first-child {
+            margin-bottom: 10px;
+        }
+
+        input:nth-child(2) {
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-flow: row;
+            justify-content: space-between;
+
+            button:first-child {
+                margin-right: 10px;
+            }
+
+            button:last-child {
+                margin-left: 10px;
+            }
         }
     }
 }

@@ -26,7 +26,7 @@
         <object class="logo" data="/images/loading-logo.svg" type="image/svg+xml" alt="Shortr logo">
             <img class="logo" src="/images/logo.png" alt="Shortr logo">
         </object>
-        <a href="/{{.Scope.Name}}"><h1 class="title">{{.Scope.Name}}</h1></a>
+        <a href="/{{.Scope.Name}}"><h1 class="title">{{if lt (len .Scope.Name) 20}} {{.Scope.Name}} {{else}} {{printf "%.20s..." .Scope.Name}} {{end}}</h1></a>
         <h2 class="subtitle" title="{{.Scope.URL}}">{{if lt (len .Scope.URL) 20}} {{.Scope.URL}} {{else}} {{printf "%.20s..." .Scope.URL}} {{end}}</h2>
         <ul>
             <li><span class="text">👉 Hits</span><span class="text">{{.Scope.Hits}}</span></li>
