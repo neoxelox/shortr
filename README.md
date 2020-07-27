@@ -18,8 +18,8 @@ _**Note:** this is just a simple service to learn various languages and framewor
 
 ## Screenshots
 ![Home page](./static/images/home.png "Home page")
-![Stats page](./static/images/stats.png "Stats page")
-![Error page](./static/images/404.png "Error page")
+![Stats page](./static/images/stats.gif "Stats page")
+![Error page](./static/images/404.gif "Error page")
 
 ## Setup
 - Install:
