@@ -11,14 +11,14 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="{{.AppScheme}}://{{.AppHost}}/{{.Scope.Name}}">
     <meta name="twitter:title" content="📊 Real time stats for /{{.Scope.Name}}">
-    <meta name="twitter:description" content="🔄 Hits: {{.Scope.Hits}} | 🕒 Last hit at: {{.Scope.LastHitAt}}">
+    <meta name="twitter:description" content='🔄 Hits: {{.Scope.Hits}} | 🕒 Last hit at: {{if .Scope.LastHitAt}} {{.Scope.LastHitAt.Format "Mon, 02 Jan 2006 15:04"}}{{else}} Never{{end}}'>
     <meta name="twitter:image" content="{{.AppScheme}}://{{.AppHost}}/images/banner.png">
     <!-- Open Graph -->
     <meta property="og:type" content="summary">
     <meta property="og:url" content="{{.AppScheme}}://{{.AppHost}}/{{.Scope.Name}}">
     <meta property="og:site_name" content="Shortr">
     <meta property="og:title" content="📊 Real time stats for /{{.Scope.Name}}">
-    <meta property="og:description" content="🔄 Hits: {{.Scope.Hits}} | 🕒 Last hit at: {{.Scope.LastHitAt}}">
+    <meta property="og:description" content='🔄 Hits: {{.Scope.Hits}} | 🕒 Last hit at: {{if .Scope.LastHitAt}} {{.Scope.LastHitAt.Format "Mon, 02 Jan 2006 15:04"}}{{else}} Never{{end}}'>
     <meta property="og:image" content="{{.AppScheme}}://{{.AppHost}}/images/banner.png">
 </head>
 <body class="background center">
