@@ -55,7 +55,7 @@ Nothing
     ```
 - **`error default`**
     ```
-    Serves error page
+    Serves 404.html page
     ```
 - **`error application/json`**
     ```json
@@ -76,7 +76,7 @@ Nothing
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
@@ -100,7 +100,7 @@ Nothing
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
@@ -124,7 +124,7 @@ Nothing
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
@@ -142,7 +142,7 @@ Nothing
 #### Response
 - **`default`**
     ```
-    Serves stats page
+    Serves stats.<renderer>.html page
     ```
 - **`application/json`**
     ```json
@@ -151,9 +151,26 @@ Nothing
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
+    }
+    ```
+
+### `ERROR` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+#### Request
+```
+Any
+```
+#### Response
+- **`default if template`**
+    ```
+    Serves <code>.html page
+    ```
+- **`application/json`**
+    ```json
+    {
+        "message": "error message"
     }
     ```
 
@@ -164,10 +181,10 @@ The project uses the latest Postgres version available and automatically initial
 ```yaml
 URL:
     id:          integer
-    name:        string
+    name:        string     nullable
     url:         string
     hits:        integer
-    last_hit_at: datetime
+    last_hit_at: datetime   nullable
     created_at:  datetime
     modified_at: datetime
 ```
