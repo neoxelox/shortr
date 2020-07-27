@@ -27,7 +27,7 @@ Nothing
     Serves /static
     ```
 
-### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name<span/>
 #### Request
 - **`path param`** _`name`_
 #### Response
@@ -46,7 +46,7 @@ Nothing
     }
     ```
 
-### `POST` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
+### `POST` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name?url=:url<span/>
 #### Request
 - **`path param`** _`name`_
 - **`query param`** _`url`_
@@ -71,7 +71,7 @@ Nothing
     ```
 
 
-### `DELETE` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `DELETE` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name<span/>
 #### Request
 - **`path param`** _`name`_
 #### Response
@@ -94,7 +94,7 @@ Nothing
     }
     ```
 
-### `PUT` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `PUT` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name?url=:url<span/>
 #### Request
 - **`path param`** _`name`_
 - **`query param`** _`url`_
@@ -118,7 +118,7 @@ Nothing
     }
     ```
 
-### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*/stats<span/>
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name/stats<span/>
 #### Request
 - **`path param`** _`name`_
 #### Response
