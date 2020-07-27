@@ -1,20 +1,20 @@
-# shortr
+# Shortr 🚀
 Simple, but blazingly fast, url shortener in various languages and frameworks
 ![Banner](./static/images/bannermd.png "Banner")
 
 _**Note:** this is just a simple service to learn various languages and frameworks. Efficiency nor security or mantainabilty are intended in this project._
 
 ## Languages
-- **Golang**
-    - [Echo](go/echo/README.md)
-- **JavaScript**
-    - [Express](js/express/README.md)
-- **TypeScript**
-    - [Deno](js/deno/README.md)
-- **Python**
-    - [FastApi](py/fastapi/README.md)
-- **Rust**
-    - [Actix-Web](rs/actix/README.md)
+- **`Golang`**
+    - **[Echo](go/echo/README.md)** ![Progress](https://img.shields.io/badge/progress-95%25-success "Progress")
+- **`JavaScript`**
+    - **[Express](js/express/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+- **`TypeScript`**
+    - **[Deno](js/deno/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+- **`Python`**
+    - **[FastApi](py/fastapi/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+- **`Rust`**
+    - **[Actix-Web](rs/actix/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 
 ## Screenshots
 ![Home page](./static/images/home.png "Home page")
