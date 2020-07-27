@@ -15,6 +15,23 @@ _**Note:** this is just a simple service to learn various languages and framewor
 - **Rust**
     - [Actix-Web](rs/actix/README.md)
 
+## Screenshots
+![Home page](./static/images/home.png "Home page")
+![Stats page](./static/images/stats.png "Stats page")
+![Error page](./static/images/404.png "Error page")
+
+## Setup
+- Install:
+    - [`docker 19.03.6 >=`](https://docs.docker.com/get-docker/)
+    - [`docker-compose 1.21.0 >=`](https://docs.docker.com/compose/install/)
+- Run `make $language/$framework` ( for example `go/echo` )
+
+**_Important_** as all WS containers map to port 80, in order to run another language/framework run `make stop` and then `make $language/$framework`.
+See [`makefile`](makefile) for further commands.
+
+## Usage
+Use the frontend [`localhost`](http://localhost) or interact directly with the shorterner via API calls described below.
+
 ## Flows
 ### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
 #### Request
@@ -137,24 +154,7 @@ Nothing
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
-    ```    
-
-## Screenshots
-![Home page](./static/images/home.png "Home page")
-![Stats page](./static/images/stats.png "Stats page")
-![Error page](./static/images/404.png "Error page")
-
-## Setup
-- Install:
-    - [`docker 19.03.6 >=`](https://docs.docker.com/get-docker/)
-    - [`docker-compose 1.21.0 >=`](https://docs.docker.com/compose/install/)
-- Run `make $language/$framework` ( for example `go/echo` )
-
-**_Important_** as all WS containers map to port 80, in order to run another language/framework run `make stop` and then `make $language/$framework`.
-See [`makefile`](makefile) for further commands.
-
-## Usage
-Use the frontend [`localhost`](http://localhost) or interact directly with the shorterner via API calls described above.
+    ```
 
 ## Database
 The project uses the latest Postgres version available and automatically initializes a pgadmin4 instance [`localhost:5433`](http://localhost:5433) to navigate through the database. Default user and password is `admin`. The server group is called `URLs` and the default database password is `postgres`.
