@@ -1,5 +1,5 @@
 # shortr
-Simple url shortener in various languages and frameworks
+Simple, but blazingly fast, url shortener in various languages and frameworks
 ![Banner](./static/images/bannermd.png "Banner")
 
 _**Note:** this is just a simple service to learn various languages and frameworks. Efficiency nor security or mantainabilty are intended in this project._
