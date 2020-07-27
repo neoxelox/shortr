@@ -3,14 +3,6 @@ Simple url shortener in various languages and frameworks
 
 _**Note:** this is just a simple service to learn various languages and frameworks. Efficiency nor security or mantainabilty are intended in this project._
 
-## Flows
-### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
-### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
-### `POST` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
-### `DELETE` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
-### `PUT` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
-### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*/stats<span/>
-
 ## Languages
 - **Golang**
     - [Echo](go/echo/README.md)
@@ -22,6 +14,135 @@ _**Note:** this is just a simple service to learn various languages and framewor
     - [FastApi](py/fastapi/README.md)
 - **Rust**
     - [Actix-Web](rs/actix/README.md)
+
+## Flows
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
+#### Request
+```
+Nothing
+```
+#### Response
+- **`default`**
+    ```
+    Serves /static
+    ```
+
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
+#### Request
+- **`path param`** _`name`_
+#### Response
+- **`default`**
+    ```
+    Redirects to name
+    ```
+- **`error default`**
+    ```
+    Serves error page
+    ```
+- **`error application/json`**
+    ```json
+    {
+        "message": "error message"
+    }
+    ```
+
+### `POST` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
+#### Request
+- **`path param`** _`name`_
+- **`query param`** _`url`_
+#### Response
+- **`default`**
+    ```json
+    {
+        "id": 33,
+        "name": "shortr",
+        "url": "https://github.com/neoxelox/shortr",
+        "hits": 1,
+        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "created_at": "2020-07-26T23:36:14.896767Z",
+        "modified_at": "2020-07-26T23:36:14.900672Z"
+    }
+    ```
+- **`error default`**
+    ```json
+    {
+        "message": "error message"
+    }
+    ```
+
+
+### `DELETE` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+#### Request
+- **`path param`** _`name`_
+#### Response
+- **`default`**
+    ```json
+    {
+        "id": 33,
+        "name": "shortr",
+        "url": "https://github.com/neoxelox/shortr",
+        "hits": 1,
+        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "created_at": "2020-07-26T23:36:14.896767Z",
+        "modified_at": "2020-07-26T23:36:14.900672Z"
+    }
+    ```
+- **`error default`**
+    ```json
+    {
+        "message": "error message"
+    }
+    ```
+
+### `PUT` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+#### Request
+- **`path param`** _`name`_
+- **`query param`** _`url`_
+#### Response
+- **`default`**
+    ```json
+    {
+        "id": 33,
+        "name": "shortr",
+        "url": "https://github.com/neoxelox/shortr",
+        "hits": 1,
+        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "created_at": "2020-07-26T23:36:14.896767Z",
+        "modified_at": "2020-07-26T23:36:14.900672Z"
+    }
+    ```
+- **`error default`**
+    ```json
+    {
+        "message": "error message"
+    }
+    ```
+
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*/stats<span/>
+#### Request
+- **`path param`** _`name`_
+#### Response
+- **`default`**
+    ```
+    Serves stats page
+    ```
+- **`application/json`**
+    ```json
+    {
+        "id": 33,
+        "name": "shortr",
+        "url": "https://github.com/neoxelox/shortr",
+        "hits": 1,
+        "last_hit_at": "2020-07-27T00:50:42.027431Z",
+        "created_at": "2020-07-26T23:36:14.896767Z",
+        "modified_at": "2020-07-26T23:36:14.900672Z"
+    }
+    ```    
+
+## Screenshots
+![Home page](./static/images/home.png "Home page")
+![Stats page](./static/images/stats.png "Stats page")
+![Error page](./static/images/404.png "Error page")
 
 ## Setup
 - Install:
