@@ -58,7 +58,7 @@ Nothing
     Serves 404.html page
     ```
 - **`error application/json`**
-    ```json
+    ```javascript
     {
         "message": "error message"
     }
@@ -70,19 +70,19 @@ Nothing
 - **`query param`** _`url`_
 #### Response
 - **`default`**
-    ```json
+    ```javascript
     {
         "id": 33,
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", // ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
     ```
 - **`error default`**
-    ```json
+    ```javascript
     {
         "message": "error message"
     }
@@ -94,19 +94,19 @@ Nothing
 - **`path param`** _`name`_
 #### Response
 - **`default`**
-    ```json
+    ```javascript
     {
         "id": 33,
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", // ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
     ```
 - **`error default`**
-    ```json
+    ```javascript
     {
         "message": "error message"
     }
@@ -118,19 +118,19 @@ Nothing
 - **`query param`** _`url`_
 #### Response
 - **`default`**
-    ```json
+    ```javascript
     {
         "id": 33,
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", // ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
     ```
 - **`error default`**
-    ```json
+    ```javascript
     {
         "message": "error message"
     }
@@ -145,13 +145,13 @@ Nothing
     Serves stats.<renderer>.html page
     ```
 - **`application/json`**
-    ```json
+    ```javascript
     {
         "id": 33,
         "name": "shortr",
         "url": "https://github.com/neoxelox/shortr",
         "hits": 1,
-        "last_hit_at": "2020-07-27T00:50:42.027431Z", ( or null )
+        "last_hit_at": "2020-07-27T00:50:42.027431Z", // ( or null )
         "created_at": "2020-07-26T23:36:14.896767Z",
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
@@ -168,7 +168,7 @@ Any
     Serves <code>.html page
     ```
 - **`application/json`**
-    ```json
+    ```javascript
     {
         "message": "error message"
     }
