@@ -32,7 +32,7 @@ See [`makefile`](makefile) for further commands.
 ## Usage
 Use the frontend [`localhost`](http://localhost) or interact directly with the shorterner via API calls described below.
 
-## Flows
+## API
 ### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/<span/>
 #### Request
 ```
@@ -174,8 +174,8 @@ URL:
 ## Overall Comparison
 These are not _good_ comparisons nor benchmarks, but gives a quick overview at language and framework efficiency. The benchmarking tool used is [Apache's AB](https://httpd.apache.org/docs/2.4/programs/ab.html) with `ab -n 1000000 -k -c 30 -q http://localhost:80/benchmark`.
 
-### `GET CACHED` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
-### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
+### `GET CACHED` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name<span/>
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name<span/>
 
 ## Contribute
 Feel free to contribute to this project by adding more languages/frameworks, the only requirement is that it has to provide the minimum endpoints described above : ) .
