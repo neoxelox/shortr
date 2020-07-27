@@ -1,12 +1,7 @@
 up:
-	docker-compose up -d postgres pgadmin
+	docker-compose up -d postgres pgadmin nginx-proxy
+	# docker-compose up -d postgres nginx-proxy letsencrypt # Change in production environment
 .SILENT: up
-
-go/echo: up
-	docker-compose up -d --build shortr_go-echo
-	docker logs -f shortr_go-echo
-.SILENT: go/echo
-.PHONY: go/echo
 
 stop:
 	docker-compose stop
@@ -21,3 +16,9 @@ prune: stop remove
 	docker system prune --force -a
 	docker volume prune --force
 .SILENT: prune
+
+go/echo: up
+	docker-compose up -d --build shortr_go-echo
+	docker logs -f shortr_go-echo
+.SILENT: go/echo
+.PHONY: go/echo

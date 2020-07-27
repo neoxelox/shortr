@@ -33,6 +33,33 @@ services:
             - "5433:80"
         restart: unless-stopped # Change for 'always' in production environment
 
+    nginx-proxy:
+        image: jwilder/nginx-proxy
+        container_name: nginx-proxy
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - certs:/etc/nginx/certs:ro
+            - vhostd:/etc/nginx/vhost.d
+            - html:/usr/share/nginx/html
+        ports:
+            - "80:80"
+            # - "443:443" # Enable in production environment
+        labels:
+            - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+
+    # Enable in production environment
+    # letsencrypt:
+    #     image: jrcs/letsencrypt-nginx-proxy-companion
+    #     container_name: letsencrypt
+    #     environment:
+    #         - NGINX_PROXY_CONTAINER=nginx-proxy
+    #     volumes:
+    #         - /var/run/docker.sock:/var/run/docker.sock:ro
+    #         - certs:/etc/nginx/certs:rw
+    #         - vhostd:/etc/nginx/vhost.d
+    #         - html:/usr/share/nginx/html
+    #      restart: always
+
     shortr_go-echo:
         build:
             context: ./
@@ -41,20 +68,21 @@ services:
         image: shortr_go-echo:latest
         environment:
             APP_PORT: 80
-            APP_HOST: localhost
-            APP_SSL_ENABLED: 'false'
+            APP_SSL_ENABLED: 'false' # Change to 'true' in production environment
             DATABASE_HOST: postgres
             DATABASE_PORT: 5432
             DATABASE_USER: postgres
             DATABASE_PASSWORD: postgres
             DATABASE_NAME: postgres
+            VIRTUAL_HOST: localhost
+            LETSENCRYPT_HOST: localhost
+            LETSENCRYPT_EMAIL: localhost
         depends_on:
             - postgres
         links:
             - postgres:postgres
-        ports:
-            - "80:80"
-            - "443:443"
+        expose:
+            - 80
         restart: unless-stopped # Change for 'always' in production environment
 
 volumes:
@@ -62,3 +90,6 @@ volumes:
     postgres:
     servers.json:
     pgadmin:
+    certs:
+    vhostd:
+    html:
