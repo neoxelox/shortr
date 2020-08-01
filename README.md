@@ -1,8 +1,9 @@
 # Shortr 🚀
-Simple, but blazingly fast, url shortener in various languages and frameworks
+**`Simple, but blazingly fast, url shortener in various languages and frameworks`**
+
 ![Banner](./static/images/bannermd.png "Banner")
 
-_**Note:** this is just a simple service to learn various languages and frameworks. Efficiency nor security or mantainabilty are intended in this project._
+_**Note:** this is just a simple service to learn various languages and frameworks. Efficiency nor security or mantainabilty are the main intention in this project._
 
 ## Languages
 - **`Golang`**
@@ -20,6 +21,16 @@ _**Note:** this is just a simple service to learn various languages and framewor
 ![Home page](./static/images/home.png "Home page")
 ![Stats page](./static/images/stats.gif "Stats page")
 ![Error page](./static/images/404.gif "Error page")
+
+## Features
+
+- **`SIMPLE, FAST AND ROBUST`**
+- **`CUSTOM OR RANDOM UNIQUE URLS`**
+- **`BEAUTIFUL BY DEFAULT AND CUSTOMIZABLE`**
+- **`AUTOMATIC-SSL READY`**
+- **`CONTAINERIZED AND EASY TO DEPLOY`**
+- **`RESPONSIVE`**
+- **`SEO FRIENDLY AND CUSTOM LINK PREVIEWS`**
 
 ## Setup
 - Install:
@@ -51,7 +62,8 @@ Nothing
 #### Response
 - **`default`**
     ```
-    Redirects to name
+    Redirects to url specified by name.
+    HTTP code 307 in order not to get urls cached by browsers.
     ```
 - **`error default`**
     ```
@@ -66,7 +78,7 @@ Nothing
 
 ### `POST` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name?url=:url<span/>
 #### Request
-- **`path param`** _`name`_
+- **`path param`** _`name`_ **`nullable`**
 - **`query param`** _`url`_
 #### Response
 - **`default`**

@@ -88,9 +88,7 @@ services:
         restart: unless-stopped # Change for 'always' in production environment
 
 volumes:
-    init.sql:
     postgres:
-    servers.json:
     pgadmin:
     certs:
     vhostd:
