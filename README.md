@@ -30,6 +30,7 @@ _**Note:** this is just a simple service to learn various languages and framewor
 - **`AUTOMATIC-SSL READY`**
 - **`CONTAINERIZED AND EASY TO DEPLOY`**
 - **`RESPONSIVE`**
+- **`LIGHTWEIGHT, BUILT-IN CACHE AND HA`**
 - **`SEO FRIENDLY AND CUSTOM LINK PREVIEWS`**
 
 ## Setup

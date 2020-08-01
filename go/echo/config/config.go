@@ -3,9 +3,10 @@ package config
 import (
 	"os"
 	"strconv"
+	"strings"
 )
 
-// GetEnvAsString gets the environment variable defined by key as an string
+// GetEnvAsString gets the environment variable defined by key as a string
 func GetEnvAsString(key string, def string) string {
 	if value, exists := os.LookupEnv(key); exists {
 		return value
@@ -27,6 +28,14 @@ func GetEnvAsBool(key string, def bool) bool {
 	valueStr := GetEnvAsString(key, "")
 	if value, err := strconv.ParseBool(valueStr); err == nil {
 		return value
+	}
+	return def
+}
+
+// GetEnvAsStringSlice gets the environment variable defined by key as a slice of string
+func GetEnvAsStringSlice(key string, def []string) []string {
+	if value, exists := os.LookupEnv(key); exists {
+		return strings.Split(value, ",")
 	}
 	return def
 }
