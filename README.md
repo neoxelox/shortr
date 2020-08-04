@@ -9,13 +9,13 @@ _**Note:** this is just a simple service to learn various languages and framewor
 - **`Golang`**
     - **[Echo](go/echo)** ![Progress](https://img.shields.io/badge/progress-95%25-success "Progress")
 - **`JavaScript`**
-    - **[Express](js/express/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+    - **[Express](js/express)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`TypeScript`**
-    - **[Deno](js/deno/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+    - **[Deno](js/deno)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`Python`**
-    - **[FastApi](py/fastapi/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+    - **[FastApi](py/fastapi)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`Rust`**
-    - **[Actix-Web](rs/actix/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+    - **[Actix-Web](rs/actix)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 
 ## Screenshots
 ![Home page](./static/images/home.png "Home page")
