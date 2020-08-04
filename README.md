@@ -7,7 +7,7 @@ _**Note:** this is just a simple service to learn various languages and framewor
 
 ## Languages
 - **`Golang`**
-    - **[Echo](go/echo/README.md)** ![Progress](https://img.shields.io/badge/progress-95%25-success "Progress")
+    - **[Echo](go/echo)** ![Progress](https://img.shields.io/badge/progress-95%25-success "Progress")
 - **`JavaScript`**
     - **[Express](js/express/README.md)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`TypeScript`**
