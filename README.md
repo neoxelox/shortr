@@ -11,7 +11,7 @@ _**Note:** this is just a simple service to learn various languages and framewor
 - **`JavaScript`**
     - **[Express](js/express)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`TypeScript`**
-    - **[Deno](js/deno)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
+    - **[Deno](ts/deno)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`Python`**
     - **[FastApi](py/fastapi)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`Rust`**
