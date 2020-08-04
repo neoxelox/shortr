@@ -32,8 +32,8 @@ func GetEnvAsBool(key string, def bool) bool {
 	return def
 }
 
-// GetEnvAsStringSlice gets the environment variable defined by key as a slice of string
-func GetEnvAsStringSlice(key string, def []string) []string {
+// GetEnvAsSlice gets the environment variable defined by key as a slice of strings
+func GetEnvAsSlice(key string, def []string) []string {
 	if value, exists := os.LookupEnv(key); exists {
 		return strings.Split(value, ",")
 	}

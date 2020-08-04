@@ -25,8 +25,8 @@
     <meta property="og:image" content="https://raw.githubusercontent.com/Neoxelox/shortr/master/static/images/banner.png">
 </head>
 <body class="background center">
-    <div class="container">
-        <object class="logo" data="/images/loading-logo.svg" type="image/svg+xml" alt="Shortr logo">
+    <div class="container expanded">
+        <object id="loading-logo" class="logo" data="/images/loading-logo.svg" type="image/svg+xml" alt="Shortr logo">
             <img class="logo" src="/images/logo.png" alt="Shortr logo">
         </object>
         <div id="app">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="sucess" v-else-if="URL">
                     <a v-bind:href="'/'+URL.name"><h1 class="title">{{URL.name | trim}}</h1></a>
-                    <h2 class="subtitle" v-bind:title="URL.url">{{URL.url | trim}}</h2>
+                    <h2 class="subtitle clickable" v-bind:title="URL.url" v-on:click="copyToClipboard(URL.url, $event.target)">{{URL.url | trim}}</h2>
                     <ul style="width: 100%;">
                         <li><span class="text">👉 Hits</span><span class="text">{{URL.hits}}</span></li>
                         <li><span class="text">🕒 Last hit</span><span class="text">{{URL.last_hit_at ? $options.filters.formatDate(URL.last_hit_at) : "Never"}}</span></li>
@@ -57,6 +57,7 @@
             </div>
         </div>
     </div>
+    <script src="/scripts/utils.js"></script>
     <script src="/scripts/app.js"></script>
 </body>
 </html>

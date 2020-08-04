@@ -34,8 +34,10 @@ services:
         restart: unless-stopped # Change for 'always' in production environment
 
     nginx-proxy:
-        image: jwilder/nginx-proxy
         container_name: nginx-proxy
+        image: jwilder/nginx-proxy
+        environment:
+            DEFAULT_HOST: localhost
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - certs:/etc/nginx/certs:ro
@@ -49,8 +51,8 @@ services:
 
     # Enable in production environment
     # letsencrypt:
-    #     image: jrcs/letsencrypt-nginx-proxy-companion
     #     container_name: letsencrypt
+    #     image: jrcs/letsencrypt-nginx-proxy-companion
     #     environment:
     #         NGINX_PROXY_CONTAINER: nginx-proxy
     #     volumes:

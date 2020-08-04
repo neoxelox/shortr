@@ -4,6 +4,7 @@
 ### Own ###
 notes.md
 *.env
+go/echo/logger/*
 
 ### Flask ###
 instance/*

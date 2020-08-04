@@ -27,7 +27,7 @@
             <img class="logo" src="/images/logo.png" alt="Shortr logo">
         </object>
         <a href="/{{.Scope.Name}}"><h1 class="title">{{if lt (len .Scope.Name) 20}} {{.Scope.Name}} {{else}} {{printf "%.20s..." .Scope.Name}} {{end}}</h1></a>
-        <h2 class="subtitle" title="{{.Scope.URL}}">{{if lt (len .Scope.URL) 20}} {{.Scope.URL}} {{else}} {{printf "%.20s..." .Scope.URL}} {{end}}</h2>
+        <h2 class="subtitle clickable" title="{{.Scope.URL}}" onclick="copyToClipboard({{.Scope.URL}}, this)">{{if lt (len .Scope.URL) 20}} {{.Scope.URL}} {{else}} {{printf "%.20s..." .Scope.URL}} {{end}}</h2>
         <ul>
             <li><span class="text">👉 Hits</span><span class="text">{{.Scope.Hits}}</span></li>
             <li><span class="text">🕒 Last hit</span><span class="text">{{if .Scope.LastHitAt}} {{.Scope.LastHitAt.Format "Mon, 02 Jan 2006 15:04"}} {{else}} Never {{end}}</span></li>
@@ -35,5 +35,6 @@
             <li><span class="text">🕒 Modified</span><span class="text">{{.Scope.ModifiedAt.Format "Mon, 02 Jan 2006 15:04"}}</span></li>
         </ul>
     </div>
+    <script src="/scripts/utils.js"></script>
 </body>
 </html>

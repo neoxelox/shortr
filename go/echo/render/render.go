@@ -35,7 +35,7 @@ func (r *Renderer) Render(w io.Writer, name string, data interface{}, c echo.Con
 	}
 	ctx := &context{
 		AppPort:   config.GetEnvAsInt("APP_PORT", 80),
-		AppHost:   config.GetEnvAsStringSlice("VIRTUAL_HOST", []string{"localhost"})[0],
+		AppHost:   config.GetEnvAsSlice("VIRTUAL_HOST", []string{"localhost"})[0],
 		AppScheme: scheme,
 		Scope:     data,
 	}

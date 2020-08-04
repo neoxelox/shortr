@@ -23,6 +23,9 @@ var app = new Vue({
         this.URL = null;
         this.ERROR = null;
 
+        // Restart logo animation
+        document.getElementById("loading-logo").contentDocument.documentElement.innerHTML += "";
+
         try {
           const response = await fetch(`${HOST}/${name}?url=${url}`, {method: 'POST', headers:{'Content-Type': 'application/json'}});
           if (!response.ok) {
@@ -45,6 +48,9 @@ var app = new Vue({
         this.URL = null;
         this.ERROR = null;
 
+        // Restart logo animation
+        document.getElementById("loading-logo").contentDocument.documentElement.innerHTML += "";
+
         try {
           const response = await fetch(`${HOST}/${name}?url=${url}`, {method: 'PUT', headers:{'Content-Type': 'application/json'}});
           if (!response.ok) {
@@ -66,6 +72,9 @@ var app = new Vue({
       deleteURL: async function (name) {
         this.URL = null;
         this.ERROR = null;
+
+        // Restart logo animation
+        document.getElementById("loading-logo").contentDocument.documentElement.innerHTML += "";
 
         try {
           const response = await fetch(`${HOST}/${name}`, {method: 'DELETE', headers:{'Content-Type': 'application/json'}});

@@ -21,7 +21,7 @@ func getURL(ctx echo.Context) error {
 	name := ctx.Param("name")
 
 	if url, exists := urlCache.Read(name); exists {
-		go logIfErr(ctx, wrap(urlRepo.UpdateMetricsByName(name))...)
+		go logIfErr(ctx.Logger(), wrap(urlRepo.UpdateMetricsByName(name))...)
 		return ctx.Redirect(http.StatusTemporaryRedirect, url.(string)) // HTTP CODE 307 IN ORDER NOT TO GET URLs CACHED
 	}
 
@@ -32,7 +32,7 @@ func getURL(ctx echo.Context) error {
 	}
 
 	go urlCache.Write(*url.Name, url.URL)
-	go logIfErr(ctx, wrap(urlRepo.UpdateMetricsByName(name))...)
+	go logIfErr(ctx.Logger(), wrap(urlRepo.UpdateMetricsByName(name))...)
 
 	return ctx.Redirect(http.StatusTemporaryRedirect, url.URL) // HTTP CODE 307 IN ORDER NOT TO GET URLs CACHED
 }
@@ -138,11 +138,25 @@ func main() {
 	}
 	defer urlRepo.Disconnect()
 
+	scheme := "http"
+	if config.GetEnvAsBool("APP_SSL_ENABLED", false) {
+		scheme = "https"
+	}
+
 	app := echo.New()
 	app.Pre(middleware.RemoveTrailingSlash())
 	app.Use(middleware.Logger()) // TODO : Find another logger, this is too slow
+	app.Use(middleware.Recover())
+	app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{fmt.Sprintf("%s://%s",
+			scheme,
+			config.GetEnvAsSlice("VIRTUAL_HOST", []string{"localhost"})[0]),
+		}, // Add more origins if required
+		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut},
+	}))
 	app.HTTPErrorHandler = customHTTPErrorHandler
 	app.Renderer = render.New("/static/templates/*.gts.html")
+	app.IPExtractor = echo.ExtractIPFromRealIPHeader()
 
 	// Routes
 	app.Static("/", "/static")
@@ -177,7 +191,7 @@ func wrap(vs ...interface{}) []interface{} {
 	return vs
 }
 
-func logIfErr(ctx echo.Context, i ...interface{}) {
+func logIfErr(logger echo.Logger, i ...interface{}) {
 	var err error = nil
 	for _, o := range i {
 		switch t := o.(type) {
@@ -186,6 +200,6 @@ func logIfErr(ctx echo.Context, i ...interface{}) {
 		}
 	}
 	if err != nil {
-		ctx.Logger().Error(err)
+		logger.Error(err)
 	}
 }
