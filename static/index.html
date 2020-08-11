@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="/images/favicon.png" sizes="192x192">
     <link rel="stylesheet" href="/styles/main.css">
     <title>Shortr</title>
+    <meta name="description" content="Short urls in seconds! 🚀">
     <!-- Vue -->
     <!-- development version, optimized for debuging -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
@@ -15,13 +16,13 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Shortr 🏠">
-    <meta name="twitter:description" content="Short it! 🚀">
+    <meta name="twitter:description" content="Short urls in seconds! 🚀">
     <meta name="twitter:image" content="https://raw.githubusercontent.com/Neoxelox/shortr/master/static/images/banner.png">
     <!-- Open Graph -->
     <meta property="og:type" content="summary">
     <meta property="og:site_name" content="Shortr">
     <meta property="og:title" content="Shortr 🏠">
-    <meta property="og:description" content="Short it! 🚀">
+    <meta property="og:description" content="Short urls in seconds! 🚀">
     <meta property="og:image" content="https://raw.githubusercontent.com/Neoxelox/shortr/master/static/images/banner.png">
 </head>
 <body class="background center">
@@ -45,8 +46,8 @@
                     <h2 class="subtitle error">{{ERROR.message}}</h2>
                 </div>
                 <div class="sucess" v-else-if="URL">
-                    <a v-bind:href="'/'+URL.name"><h1 class="title">{{URL.name | trim}}</h1></a>
-                    <h2 class="subtitle clickable" v-bind:title="URL.url" v-on:click="copyToClipboard(URL.url, $event.target)">{{URL.url | trim}}</h2>
+                    <a v-bind:href="'/'+URL.name"><h1 class="title">{{URL.name | trim(10)}}</h1></a>
+                    <h2 class="subtitle clickable" v-bind:title="URL.url" v-on:click="copyToClipboard(URL.url, $event.target)">{{URL.url | trim(20)}}</h2>
                     <ul style="width: 100%;">
                         <li><span class="text">👉 Hits</span><span class="text">{{URL.hits}}</span></li>
                         <li><span class="text">🕒 Last hit</span><span class="text">{{URL.last_hit_at ? $options.filters.formatDate(URL.last_hit_at) : "Never"}}</span></li>

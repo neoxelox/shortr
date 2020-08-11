@@ -4,7 +4,7 @@ It is recommended that you **`reuse the packages`** for other golang Shortr impl
 
 It's built with the web framework [**`echo`**](https://echo.labstack.com/).
 The connection to the database is made via the fastest postgres driver [**`pgx`**](https://github.com/jackc/pgx).
-The default echo logger was a bit slow, so I implemented the fast [**`zerolog`**](https://github.com/rs/zerolog) (totally overkill).
+The default echo logger was a bit slow, so I implemented the fast [**`zerolog`**](https://github.com/rs/zerolog) with the [**`diode`**](https://github.com/cloudfoundry/go-diodes) writer for thread-safe and non-blocking logging.
 
 You will have noticed that no test have been made. I may add them in the future, but for now they are overkill for this simple application.
 However, these custom made packages will be updated and tested in my [**`microservice-template`**](https://github.com/Neoxelox/microservice-template) repository (which for this small project I did not follow it's patterns).

@@ -25,7 +25,7 @@ _**Note:** this is just a simple service to learn various languages and framewor
 ## Features
 
 - **🚀 `SIMPLE, FAST AND ROBUST`**
-- **✨ `CUSTOM OR RANDOM UNIQUE URLS`**
+- **✨ `CUSTOM OR RANDOM UNIQUE URLS (ACCEPTS UNICODE, SPACES... EVEN EMOJIS! 🔝)`**
 - **🌺 `BEAUTIFUL BY DEFAULT AND CUSTOMIZABLE`**
 - **🛡️ `AUTOMATIC-SSL READY`**
 - **🏗️ `CONTAINERIZED AND EASY TO DEPLOY`**
@@ -63,8 +63,8 @@ Nothing
 #### Response
 - **`default`**
     ```
-    Redirects to url specified by name.
-    HTTP code 307 in order not to get urls cached by browsers.
+    Redirects to url specified by name
+    HTTP code 307 in order not to get urls cached by browsers
     ```
 - **`error default`**
     ```
@@ -170,6 +170,23 @@ Nothing
     }
     ```
 
+### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/health<span/>
+#### Request
+```
+Nothing
+```
+#### Response
+- **`default`**
+    ```
+    OK
+    ```
+- **`error default`**
+    ```javascript
+    {
+        "message": "error message"
+    }
+    ```
+
 ### `ERROR` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/*<span/>
 #### Request
 ```
@@ -194,7 +211,7 @@ The project uses the latest Postgres version available and automatically initial
 ```yaml
 URL:
     id:          integer
-    name:        string     nullable
+    name:        string
     url:         string
     hits:        integer
     last_hit_at: datetime   nullable

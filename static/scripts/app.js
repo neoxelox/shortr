@@ -96,10 +96,10 @@ var app = new Vue({
       }
     },
     filters: {
-      trim: function (value) {
+      trim: function (value, length=20) {
         if (!value) return '';
         value = value.toString();
-        return value.length >= 20 ? `${value.substring(0, 20)}...` : value;
+        return value.length > length ? `${value.substring(0, length)}...` : value;
       },
       formatDate: function (value) {
         if (!value) return '';

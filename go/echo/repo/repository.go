@@ -2,9 +2,11 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"shortr/model"
 	"time"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgxutil"
 )
@@ -15,8 +17,8 @@ type Repo struct {
 }
 
 // Connect tries to connect to an specified database via the dsn connection string
-func Connect(dsn string, retries int) (*Repo, error) {
-	db, err := connect(context.Background(), dsn, retries)
+func Connect(dsn string, retries int, logger pgx.Logger) (*Repo, error) {
+	db, err := connect(context.Background(), dsn, retries, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -148,4 +150,15 @@ func (r *Repo) DeleteByName(name string) (model.URL, error) {
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		name)
 	return URL, err
+}
+
+// Health checks the database connection health
+func (r Repo) Health() error {
+	if _, err := r.db.Exec(context.Background(), ";"); err != nil {
+		return err
+	}
+	if r.db.Stat().TotalConns() < r.db.Config().MinConns {
+		return errors.New("database connections below the threshold")
+	}
+	return nil
 }

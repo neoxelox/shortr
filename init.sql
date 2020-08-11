@@ -1,6 +1,8 @@
+CREATE SEQUENCE "urls_id_seq";
+
 CREATE TABLE "urls" (
-    "id"            SERIAL PRIMARY KEY,
-    "name"          VARCHAR(100) UNIQUE NULL,
+    "id"            INTEGER PRIMARY KEY DEFAULT NEXTVAL('urls_id_seq'),
+    "name"          VARCHAR(100) UNIQUE NOT NULL DEFAULT CURRVAL('urls_id_seq'),
     "url"           TEXT NOT NULL,
     "hits"          INTEGER NOT NULL DEFAULT 0,
     "last_hit_at"   TIMESTAMP WITH TIME ZONE NULL,

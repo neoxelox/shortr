@@ -6,6 +6,7 @@ import (
 	nurl "net/url"
 	"shortr/cache"
 	"shortr/config"
+	"shortr/logger"
 	"shortr/render"
 	"shortr/repo"
 	"shortr/shortid"
@@ -31,7 +32,7 @@ func getURL(ctx echo.Context) error {
 		return echo.ErrNotFound
 	}
 
-	go urlCache.Write(*url.Name, url.URL)
+	go urlCache.Write(url.Name, url.URL)
 	go logIfErr(ctx.Logger(), wrap(urlRepo.UpdateMetricsByName(name))...)
 
 	return ctx.Redirect(http.StatusTemporaryRedirect, url.URL) // HTTP CODE 307 IN ORDER NOT TO GET URLs CACHED
@@ -79,7 +80,7 @@ func deleteURL(ctx echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	urlCache.Remove(*url.Name)
+	urlCache.Remove(url.Name)
 
 	return ctx.JSON(http.StatusOK, url)
 }
@@ -100,8 +101,8 @@ func modifyURL(ctx echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	if _, exists := urlCache.Read(*url.Name); exists {
-		urlCache.Write(*url.Name, url.URL)
+	if _, exists := urlCache.Read(url.Name); exists {
+		urlCache.Write(url.Name, url.URL)
 	}
 
 	return ctx.JSON(http.StatusOK, url)
@@ -127,12 +128,14 @@ func getURLStats(ctx echo.Context) error {
 
 func main() {
 	var err error
+	appLogger := logger.New("Shortr")
+
 	urlRepo, err = repo.Connect(fmt.Sprintf("postgresql://%s:%s@%s:%d",
 		config.GetEnvAsString("DATABASE_USER", "postgres"),
 		config.GetEnvAsString("DATABASE_PASSWORD", "postgres"),
 		config.GetEnvAsString("DATABASE_HOST", "postgres"),
 		config.GetEnvAsInt("DATABASE_PORT", 5432),
-	), 5)
+	), 5, logger.Database(appLogger))
 	if err != nil {
 		panic(err)
 	}
@@ -144,8 +147,13 @@ func main() {
 	}
 
 	app := echo.New()
+	app.Logger = logger.Standard(appLogger)
+	app.HTTPErrorHandler = customHTTPErrorHandler
+	app.Renderer = render.New("/static/templates/*.gts.html")
+	app.IPExtractor = echo.ExtractIPFromRealIPHeader()
+
 	app.Pre(middleware.RemoveTrailingSlash())
-	app.Use(middleware.Logger()) // TODO : Find another logger, this is too slow
+	app.Use(logger.Middleware(appLogger))
 	app.Use(middleware.Recover())
 	app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{fmt.Sprintf("%s://%s",
@@ -154,12 +162,10 @@ func main() {
 		}, // Add more origins if required
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut},
 	}))
-	app.HTTPErrorHandler = customHTTPErrorHandler
-	app.Renderer = render.New("/static/templates/*.gts.html")
-	app.IPExtractor = echo.ExtractIPFromRealIPHeader()
 
 	// Routes
 	app.Static("/", "/static")
+	app.GET("/health", healthCheck)
 	app.POST("/", shortenURL)
 	url := app.Group("/:name")
 	/*--*/ url.GET("", getURL)
@@ -185,6 +191,15 @@ func customHTTPErrorHandler(err error, ctx echo.Context) {
 	}
 	ctx.File(fmt.Sprintf("/static/templates/%d.html", code))
 	ctx.Echo().DefaultHTTPErrorHandler(err, ctx)
+}
+
+func healthCheck(ctx echo.Context) error {
+	err := urlRepo.Health()
+	if err != nil {
+		ctx.Logger().Error(err)
+		return echo.ErrServiceUnavailable
+	}
+	return ctx.String(http.StatusOK, "OK\n")
 }
 
 func wrap(vs ...interface{}) []interface{} {
