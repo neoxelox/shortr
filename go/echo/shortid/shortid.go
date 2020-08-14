@@ -3,7 +3,6 @@ package shortid
 import (
 	"fmt"
 	"math"
-	"regexp"
 )
 
 // Encode transforms a number to a compressed base62 string representation
@@ -40,14 +39,16 @@ func Decode(id string) (int, error) {
 }
 
 func hydrate(chr string) (int, error) {
-	if matched, _ := regexp.MatchString("[0-9]", chr); matched {
+	switch {
+	case chr >= "0" && chr <= "9":
 		return int([]rune(chr)[0] - 48), nil
-	} else if matched, _ := regexp.MatchString("[A-Z]", chr); matched {
+	case chr >= "A" && chr <= "Z":
 		return int([]rune(chr)[0] - 55), nil
-	} else if matched, _ := regexp.MatchString("[a-z]", chr); matched {
+	case chr >= "a" && chr <= "z":
 		return int([]rune(chr)[0] - 61), nil
+	default:
+		return -1, fmt.Errorf("%s is not valid character", chr)
 	}
-	return -1, fmt.Errorf("%s is not valid character", chr)
 }
 
 func dehydrate(dgt int) (string, error) {
