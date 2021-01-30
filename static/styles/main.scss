@@ -216,7 +216,7 @@ body, html {
         background-color: #B721FF;
 
         &:hover {
-            background-color: lighten($color: #B721FF, $amount: 35);
+            background-color: lighten($color: #B721FF, $amount: 32.5);
             color: #B721FF;
             transition: background-color 0.25s, color 0.25s; 
         }
@@ -226,7 +226,7 @@ body, html {
         background-color: $success-font-color;
 
         &:hover {
-            background-color: lighten($color: $success-font-color, $amount: 30);
+            background-color: lighten($color: $success-font-color, $amount: 27.5);
             color: $success-font-color;
             transition: background-color 0.25s, color 0.25s; 
         }

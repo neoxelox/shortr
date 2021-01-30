@@ -3,13 +3,21 @@ package repo
 import (
 	"context"
 	"errors"
+	"fmt"
+	"regexp"
 	"shortr/model"
 	"time"
 
+	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgxutil"
 )
+
+var ErrNoRows = pgx.ErrNoRows
+var rErrNoRows = regexp.MustCompile(fmt.Sprintf("^%s$", pgx.ErrNoRows))
+var ErrIntegrityViolation = errors.New("integrity constraint violation")
+var rErrIntegrityViolation = regexp.MustCompile(fmt.Sprintf("(SQLSTATE %s)", pgerrcode.UniqueViolation))
 
 // Repo describes the URLs repository
 type Repo struct {
@@ -39,6 +47,14 @@ func (r *Repo) GetByID(id int) (model.URL, error) {
 			  WHERE "id" = $1;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		id)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -49,6 +65,14 @@ func (r *Repo) GetByName(name string) (model.URL, error) {
 			  WHERE "name" = $1;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		name)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -62,6 +86,14 @@ func (r *Repo) Create(url string) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		url, createdAt, modifiedAt)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -75,6 +107,14 @@ func (r *Repo) UpdateNameByID(id int, name string) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		name, modifiedAt, id)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -88,6 +128,14 @@ func (r *Repo) UpdateURLByID(id int, url string) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		url, modifiedAt, id)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -101,6 +149,14 @@ func (r *Repo) UpdateURLByName(name string, url string) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		url, modifiedAt, name)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -114,6 +170,14 @@ func (r *Repo) UpdateMetricsByID(id int) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		lastHitAt, id)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -127,6 +191,14 @@ func (r *Repo) UpdateMetricsByName(name string) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		lastHitAt, name)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -138,6 +210,14 @@ func (r *Repo) DeleteByID(id int) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		id)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 
@@ -149,6 +229,14 @@ func (r *Repo) DeleteByName(name string) (model.URL, error) {
 			  RETURNING *;`
 	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
 		name)
+	if err != nil {
+		switch {
+		case rErrNoRows.MatchString(err.Error()):
+			return URL, ErrNoRows
+		case rErrIntegrityViolation.MatchString(err.Error()):
+			return URL, ErrIntegrityViolation
+		}
+	}
 	return URL, err
 }
 

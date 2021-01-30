@@ -169,6 +169,16 @@ Nothing
         "modified_at": "2020-07-26T23:36:14.900672Z"
     }
     ```
+- **`error default`**
+    ```
+    Serves 404.html page
+    ```
+- **`error application/json`**
+    ```javascript
+    {
+        "message": "error message"
+    }
+    ```
 
 ### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/health<span/>
 #### Request
@@ -219,11 +229,28 @@ URL:
     modified_at: datetime
 ```
 
-## Overall Comparison
-These are not _good_ comparisons nor benchmarks, but gives a quick overview at language and framework efficiency. The benchmarking tool used is [Apache's AB](https://httpd.apache.org/docs/2.4/programs/ab.html) with `ab -n 1000000 -k -c 30 -q http://localhost:80/benchmark`.
+## Benchmarks
+The load testing tool is [Locust](https://github.com/locustio/locust) using 1 master and 4 worker containers, which are automatically created. All follow the [locustfile](locustfile.py) with `2500` users cap and a `25` spawn rate.
+The benchmark must not be taken as _fully good_ comparison, but gives a quick overview at language and framework efficiency for this purpose.
 
-### `GET CACHED` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name<span/>
-### `GET` <span style="color: #607D8B; font-weight: normal; font-size: 0.8em;">/:name<span/>
+The minimum number simultaneous files open for Locust to work is `10000`. You can check your SO's default using `ulimit -Sn` and then increasing it with `ulimit -S -n 10000`.
+
+The benchmark was run on (`sudo lshw -short`):
+```
+H/W path         Device           Class          Description
+============================================================
+                                  system         MS-7B29 (Default string)
+/0                                bus            H310M PRO-VDH (MS-7B29)
+/0/39/0                           memory         8GiB DIMM DDR4 Synchronous 2667 MHz (0,4 ns)
+/0/39/2                           memory         8GiB DIMM DDR4 Synchronous 2667 MHz (0,4 ns)
+/0/46                             processor      Intel(R) Core(TM) i5-8400 CPU @ 2.80GHz
+/0/100/1/0                        display        GM206 [GeForce GTX 960]
+```
+
+### `Mixed API usage`
+| Language | Framework | Mean requests per second | Maximum requests per second | Slowest request |
+|:--------:|:---------:|:------------------------:|:---------------------------:|:---------------:|
+|    Go    |    Echo   |         6850 rps         |           7050 rps          |      810 ms     |
 
 ## Contribute
 Feel free to contribute to this project by adding more languages/frameworks, the only requirement is that it has to provide the minimum endpoints described above : ) .

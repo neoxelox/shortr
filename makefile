@@ -1,5 +1,5 @@
 up:
-	docker-compose up -d postgres pgadmin nginx-proxy
+	docker-compose up -d postgres pgadmin nginx-proxy locust-master locust-worker
 	# docker-compose up -d postgres nginx-proxy letsencrypt # Change in production environment
 .SILENT: up
 

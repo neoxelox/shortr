@@ -1,21 +1,25 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	nurl "net/url"
+	"os"
+	"os/signal"
 	"shortr/cache"
 	"shortr/config"
 	"shortr/logger"
 	"shortr/render"
 	"shortr/repo"
 	"shortr/shortid"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-var urlCache = cache.New(1024)
+var urlCache = cache.New(4096)
 var urlRepo *repo.Repo
 
 func getURL(ctx echo.Context) error {
@@ -28,8 +32,11 @@ func getURL(ctx echo.Context) error {
 
 	url, err := urlRepo.GetByName(name)
 	if err != nil {
+		if err == repo.ErrNoRows {
+			return echo.ErrNotFound
+		}
 		ctx.Logger().Error(err)
-		return echo.ErrNotFound
+		return echo.ErrInternalServerError
 	}
 
 	go urlCache.Write(url.Name, url.URL)
@@ -50,6 +57,9 @@ func shortenURL(ctx echo.Context) error {
 
 	url, err := urlRepo.Create(qurl)
 	if err != nil {
+		if err == repo.ErrIntegrityViolation {
+			return echo.ErrBadRequest
+		}
 		ctx.Logger().Error(err)
 		return echo.ErrInternalServerError
 	}
@@ -64,6 +74,9 @@ func shortenURL(ctx echo.Context) error {
 
 	url, err = urlRepo.UpdateNameByID(url.ID, name)
 	if err != nil {
+		if err == repo.ErrIntegrityViolation {
+			return echo.ErrBadRequest
+		}
 		ctx.Logger().Error(err)
 		return echo.ErrInternalServerError
 	}
@@ -76,6 +89,9 @@ func deleteURL(ctx echo.Context) error {
 
 	url, err := urlRepo.DeleteByName(name)
 	if err != nil {
+		if err == repo.ErrNoRows {
+			return echo.ErrBadRequest
+		}
 		ctx.Logger().Error(err)
 		return echo.ErrInternalServerError
 	}
@@ -97,6 +113,9 @@ func modifyURL(ctx echo.Context) error {
 
 	url, err := urlRepo.UpdateURLByName(name, qurl)
 	if err != nil {
+		if err == repo.ErrNoRows || err == repo.ErrIntegrityViolation {
+			return echo.ErrBadRequest
+		}
 		ctx.Logger().Error(err)
 		return echo.ErrInternalServerError
 	}
@@ -114,8 +133,11 @@ func getURLStats(ctx echo.Context) error {
 
 	url, err := urlRepo.GetByName(name)
 	if err != nil {
+		if err == repo.ErrNoRows {
+			return echo.ErrNotFound
+		}
 		ctx.Logger().Error(err)
-		return echo.ErrNotFound
+		return echo.ErrInternalServerError
 	}
 
 	switch contentType {
@@ -174,7 +196,18 @@ func main() {
 	/*--*/ url.PUT("", modifyURL)
 	/*--*/ url.GET("/stats", getURLStats)
 
-	app.Logger.Fatal(app.Start(fmt.Sprintf(":%d", config.GetEnvAsInt("APP_PORT", 80))))
+	go app.Logger.Fatal(app.Start(fmt.Sprintf(":%d", config.GetEnvAsInt("APP_PORT", 80))))
+
+	// Graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	if err := app.Shutdown(ctx); err != nil {
+		app.Logger.Fatal(err)
+	}
 }
 
 func customHTTPErrorHandler(err error, ctx echo.Context) {

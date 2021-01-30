@@ -278,7 +278,7 @@ body, html {
 }
 
 .container .primary-color:hover {
-  background-color: #f1d4ff;
+  background-color: #edc7ff;
   color: #B721FF;
   -webkit-transition: background-color 0.25s, color 0.25s;
   transition: background-color 0.25s, color 0.25s;
@@ -289,7 +289,7 @@ body, html {
 }
 
 .container .success-color:hover {
-  background-color: #c3e0c4;
+  background-color: #bbdcbc;
   color: #5eac61;
   -webkit-transition: background-color 0.25s, color 0.25s;
   transition: background-color 0.25s, color 0.25s;

@@ -129,9 +129,7 @@ func (l *Logger) SetLevel(v gommon.Lvl) {
 }
 
 // SetHeader satisfies the echo.Logger interface
-func (l *Logger) SetHeader(h string) {
-	return
-}
+func (l *Logger) SetHeader(h string) {}
 
 // Print satisfies the echo.Logger interface
 func (l Logger) Print(i ...interface{}) {
@@ -312,6 +310,7 @@ func Middleware(logger *Logger) echo.MiddlewareFunc {
 				Str("path", req.RequestURI).
 				Int("status", res.Status).
 				Str("ip_address", ctx.RealIP()).
+				Str("user_agent", req.UserAgent()).
 				Dur("latency", stop.Sub(start)).
 				Msg("")
 

@@ -20,7 +20,7 @@ services:
         container_name: pgadmin
         image: dpage/pgadmin4
         environment:
-            PGADMIN_DEFAULT_EMAIL: admin
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
             PGADMIN_DEFAULT_PASSWORD: admin
         volumes:
             - ./servers.json:/pgadmin4/servers.json
@@ -63,6 +63,24 @@ services:
     #     depends_on:
     #         - nginx-proxy
     #     restart: always
+
+    locust-master:
+        container_name: locust-master
+        image: locustio/locust
+        ports:
+        - "8089:8089"
+        volumes:
+        - ./locustfile.py:/mnt/locust/locustfile.py
+        command: -f /mnt/locust/locustfile.py --master --host http://nginx-proxy --users 2500 --spawn-rate 25
+  
+    locust-worker:
+        # container_name: locust-worker # Scalable containers cannot have custom names
+        image: locustio/locust
+        volumes:
+        - ./locustfile.py:/mnt/locust/locustfile.py
+        command: -f /mnt/locust/locustfile.py --worker --master-host locust-master
+        deploy:
+          replicas: 4
 
     shortr_go-echo:
         build:

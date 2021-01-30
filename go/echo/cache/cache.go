@@ -3,6 +3,7 @@ package cache
 import (
 	"container/list"
 	"fmt"
+	"sync"
 )
 
 // Entry describes each row of a Cache
@@ -16,6 +17,7 @@ type Cache struct {
 	capacity int
 	order    *list.List
 	data     map[interface{}]*list.Element
+	mutex    sync.RWMutex
 }
 
 // New creates a new Cache instance
@@ -29,6 +31,9 @@ func New(capacity int) *Cache {
 
 // Write inserts the key-value pair into the Cache
 func (c *Cache) Write(key interface{}, value interface{}) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+
 	if c.capacity == c.Size() {
 		element := c.order.Back()
 		if element == nil {
@@ -44,6 +49,9 @@ func (c *Cache) Write(key interface{}, value interface{}) {
 
 // Read retrieves the value of the key in the Cache
 func (c *Cache) Read(key interface{}) (interface{}, bool) {
+	c.mutex.RLock()
+	defer c.mutex.RUnlock()
+
 	listElement, exists := c.data[key]
 	if !exists {
 		return nil, false
@@ -56,6 +64,9 @@ func (c *Cache) Read(key interface{}) (interface{}, bool) {
 
 // Remove removes an Entry in the Cache by key
 func (c *Cache) Remove(key interface{}) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+
 	c.remove(key)
 }
 
@@ -75,6 +86,6 @@ func (c *Cache) remove(key interface{}) {
 }
 
 // String defines an string representation of a Cache
-func (c Cache) String() string {
+func (c *Cache) String() string {
 	return fmt.Sprintf("<LRU Cache %d/%d>\n", len(c.data), c.capacity)
 }
