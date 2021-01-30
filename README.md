@@ -233,7 +233,7 @@ URL:
 The load testing tool is [Locust](https://github.com/locustio/locust) using 1 master and 4 worker containers, which are automatically created. All follow the [locustfile](locustfile.py) with `2500` users cap and a `25` spawn rate.
 The benchmark must not be taken as _fully good_ comparison, but gives a quick overview at language and framework efficiency for this purpose.
 
-The minimum number simultaneous files open for Locust to work is `10000`. You can check your SO's default using `ulimit -Sn` and then increasing it with `ulimit -S -n 10000`.
+The minimum number of simultaneous files open for Locust to work is `10000`. You can check your SO's default using `ulimit -Sn` and then increasing it with `ulimit -S -n 10000`.
 
 The benchmark was run on (`sudo lshw -short`):
 ```
