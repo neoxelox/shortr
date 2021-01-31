@@ -277,7 +277,7 @@ func Standard(logger *Logger) *Logger {
 // Database implements pgx.Logger interface
 func Database(logger *Logger) *Logger {
 	return &Logger{
-		logger: logger.logger.With().Str("module", "pgx").Logger(),
+		logger: logger.logger.With().Str("module", "database").Logger(),
 		level:  zerolog.ErrorLevel,
 		out:    logger.out,
 		prefix: logger.prefix,

@@ -8,6 +8,7 @@ import (
 	"shortr/model"
 	"time"
 
+	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -21,7 +22,13 @@ var rErrIntegrityViolation = regexp.MustCompile(fmt.Sprintf("(SQLSTATE %s)", pge
 
 // Repo describes the URLs repository
 type Repo struct {
-	db *pgxpool.Pool
+	db   *pgxpool.Pool
+	conn connection
+}
+
+type connection interface {
+	Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error)
+	Exec(ctx context.Context, sql string, args ...interface{}) (pgconn.CommandTag, error)
 }
 
 // Connect tries to connect to an specified database via the dsn connection string
@@ -31,7 +38,8 @@ func Connect(dsn string, retries int, logger pgx.Logger) (*Repo, error) {
 		return nil, err
 	}
 	return &Repo{
-		db: db,
+		db:   db,
+		conn: db,
 	}, nil
 }
 
@@ -40,13 +48,40 @@ func (r *Repo) Disconnect() {
 	r.db.Close()
 }
 
+func (r *Repo) Transaction(ctx context.Context, fn func(*Repo) error) error {
+	tx, err := r.db.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel:   pgx.Serializable,
+		AccessMode: pgx.ReadWrite,
+	})
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if p := recover(); p != nil {
+			tx.Rollback(ctx)
+			panic(p)
+		}
+	}()
+
+	err = fn(&Repo{
+		db:   r.db,
+		conn: tx,
+	})
+	if err != nil {
+		tx.Rollback(ctx)
+		return err
+	}
+	err = tx.Commit(ctx)
+	return err
+}
+
 // GetByID retrieves the URL by its id
-func (r *Repo) GetByID(id int) (model.URL, error) {
+func (r *Repo) GetByID(ctx context.Context, id int) (model.URL, error) {
 	var URL model.URL
 	query := `SELECT * FROM "urls"
 			  WHERE "id" = $1;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		id)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, id)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -59,12 +94,11 @@ func (r *Repo) GetByID(id int) (model.URL, error) {
 }
 
 // GetByName retrieves the URL by its name
-func (r *Repo) GetByName(name string) (model.URL, error) {
+func (r *Repo) GetByName(ctx context.Context, name string) (model.URL, error) {
 	var URL model.URL
 	query := `SELECT * FROM "urls"
 			  WHERE "name" = $1;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		name)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, name)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -77,15 +111,14 @@ func (r *Repo) GetByName(name string) (model.URL, error) {
 }
 
 // Create creates a new entry for the url and returns the new URL
-func (r *Repo) Create(url string) (model.URL, error) {
+func (r *Repo) Create(ctx context.Context, url string) (model.URL, error) {
 	var URL model.URL
 	createdAt := time.Now()
 	modifiedAt := createdAt
 	query := `INSERT INTO "urls" ("url", "created_at", "modified_at")
 			  VALUES ($1, $2, $3)
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		url, createdAt, modifiedAt)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, url, createdAt, modifiedAt)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -98,15 +131,14 @@ func (r *Repo) Create(url string) (model.URL, error) {
 }
 
 // UpdateNameByID updates the name for the url by its id and returns the updated URL
-func (r *Repo) UpdateNameByID(id int, name string) (model.URL, error) {
+func (r *Repo) UpdateNameByID(ctx context.Context, id int, name string) (model.URL, error) {
 	var URL model.URL
 	modifiedAt := time.Now()
 	query := `UPDATE "urls"
 			  SET "name" = $1, "modified_at" = $2
 			  WHERE "id" = $3
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		name, modifiedAt, id)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, name, modifiedAt, id)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -119,15 +151,14 @@ func (r *Repo) UpdateNameByID(id int, name string) (model.URL, error) {
 }
 
 // UpdateURLByID updates the url by its id and returns the updated URL
-func (r *Repo) UpdateURLByID(id int, url string) (model.URL, error) {
+func (r *Repo) UpdateURLByID(ctx context.Context, id int, url string) (model.URL, error) {
 	var URL model.URL
 	modifiedAt := time.Now()
 	query := `UPDATE "urls"
 	          SET "url" = $1, "modified_at" = $2
 			  WHERE "id" = $3
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		url, modifiedAt, id)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, url, modifiedAt, id)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -140,15 +171,14 @@ func (r *Repo) UpdateURLByID(id int, url string) (model.URL, error) {
 }
 
 // UpdateURLByName updates the url by its name and returns the updated URL
-func (r *Repo) UpdateURLByName(name string, url string) (model.URL, error) {
+func (r *Repo) UpdateURLByName(ctx context.Context, name string, url string) (model.URL, error) {
 	var URL model.URL
 	modifiedAt := time.Now()
 	query := `UPDATE "urls"
 			  SET "url" = $1, "modified_at" = $2
 			  WHERE "name" = $3
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		url, modifiedAt, name)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, url, modifiedAt, name)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -161,15 +191,14 @@ func (r *Repo) UpdateURLByName(name string, url string) (model.URL, error) {
 }
 
 // UpdateMetricsByID updates the metrics for the url by its id and returns the updated URL
-func (r *Repo) UpdateMetricsByID(id int) (model.URL, error) {
+func (r *Repo) UpdateMetricsByID(ctx context.Context, id int) (model.URL, error) {
 	var URL model.URL
 	lastHitAt := time.Now()
 	query := `UPDATE "urls"
 			  SET "hits" = "hits" + 1, "last_hit_at" = $1
 			  WHERE "id" = $2
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		lastHitAt, id)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, lastHitAt, id)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -182,15 +211,14 @@ func (r *Repo) UpdateMetricsByID(id int) (model.URL, error) {
 }
 
 // UpdateMetricsByName updates the metrics for the url by its name and returns the updated URL
-func (r *Repo) UpdateMetricsByName(name string) (model.URL, error) {
+func (r *Repo) UpdateMetricsByName(ctx context.Context, name string) (model.URL, error) {
 	var URL model.URL
 	lastHitAt := time.Now()
 	query := `UPDATE "urls"
 			  SET "hits" = "hits" + 1, "last_hit_at" = $1
 			  WHERE "name" = $2
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		lastHitAt, name)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, lastHitAt, name)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -203,13 +231,12 @@ func (r *Repo) UpdateMetricsByName(name string) (model.URL, error) {
 }
 
 // DeleteByID deletes de url entry by its id and returns the deleted URL
-func (r *Repo) DeleteByID(id int) (model.URL, error) {
+func (r *Repo) DeleteByID(ctx context.Context, id int) (model.URL, error) {
 	var URL model.URL
 	query := `DELETE FROM "urls"
 			  WHERE "id" = $1
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		id)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, id)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):
@@ -222,13 +249,12 @@ func (r *Repo) DeleteByID(id int) (model.URL, error) {
 }
 
 // DeleteByName deletes de url entry by its name and returns the deleted URL
-func (r *Repo) DeleteByName(name string) (model.URL, error) {
+func (r *Repo) DeleteByName(ctx context.Context, name string) (model.URL, error) {
 	var URL model.URL
 	query := `DELETE FROM "urls"
 			  WHERE "name" = $1
 			  RETURNING *;`
-	err := pgxutil.SelectStruct(context.Background(), r.db, &URL, query,
-		name)
+	err := pgxutil.SelectStruct(ctx, r.conn, &URL, query, name)
 	if err != nil {
 		switch {
 		case rErrNoRows.MatchString(err.Error()):

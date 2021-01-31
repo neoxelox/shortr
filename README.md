@@ -7,7 +7,7 @@ _**Note:** this is just a simple service to learn various languages and framewor
 
 ## Languages
 - **`Golang`**
-    - **[Echo](go/echo)** ![Progress](https://img.shields.io/badge/progress-95%25-success "Progress")
+    - **[Echo](go/echo)** ![Progress](https://img.shields.io/badge/progress-100%25-success "Progress")
 - **`JavaScript`**
     - **[Express](js/express)** ![Progress](https://img.shields.io/badge/progress-0%25-inactive "Progress")
 - **`TypeScript`**
@@ -215,7 +215,7 @@ Any
     ```
 
 ## Database
-The project uses the latest Postgres version available and automatically initializes a pgadmin4 instance [`localhost:5433`](http://localhost:5433) to navigate through the database. Default user and password is `admin`. The server group is called `URLs` and the default database password is `postgres`.
+The project uses the latest Postgres version available and automatically initializes a pgadmin4 instance [`localhost:5433`](http://localhost:5433) to navigate through the database. Default user is `admin@admin.com` and password `admin`. The server group is called `URLs` and the default database password is `postgres`.
 
 ## Model
 ```yaml
@@ -250,7 +250,7 @@ H/W path         Device           Class          Description
 ### `Mixed API usage`
 | Language | Framework | Mean requests per second | Maximum requests per second | Slowest request |
 |:--------:|:---------:|:------------------------:|:---------------------------:|:---------------:|
-|    Go    |    Echo   |         6850 rps         |           7050 rps          |      810 ms     |
+|    Go    |    Echo   |         6650 rps         |           7050 rps          |      810 ms     |
 
 ## Contribute
 Feel free to contribute to this project by adding more languages/frameworks, the only requirement is that it has to provide the minimum endpoints described above : ) .

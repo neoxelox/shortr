@@ -10,6 +10,7 @@ import (
 	"shortr/cache"
 	"shortr/config"
 	"shortr/logger"
+	"shortr/model"
 	"shortr/render"
 	"shortr/repo"
 	"shortr/shortid"
@@ -26,11 +27,11 @@ func getURL(ctx echo.Context) error {
 	name := ctx.Param("name")
 
 	if url, exists := urlCache.Read(name); exists {
-		go logIfErr(ctx.Logger(), wrap(urlRepo.UpdateMetricsByName(name))...)
+		go logIfErr(ctx.Logger(), wrap(urlRepo.UpdateMetricsByName(ctx.Request().Context(), name))...)
 		return ctx.Redirect(http.StatusTemporaryRedirect, url.(string)) // HTTP CODE 307 IN ORDER NOT TO GET URLs CACHED
 	}
 
-	url, err := urlRepo.GetByName(name)
+	url, err := urlRepo.GetByName(ctx.Request().Context(), name)
 	if err != nil {
 		if err == repo.ErrNoRows {
 			return echo.ErrNotFound
@@ -40,7 +41,7 @@ func getURL(ctx echo.Context) error {
 	}
 
 	go urlCache.Write(url.Name, url.URL)
-	go logIfErr(ctx.Logger(), wrap(urlRepo.UpdateMetricsByName(name))...)
+	go logIfErr(ctx.Logger(), wrap(urlRepo.UpdateMetricsByName(ctx.Request().Context(), name))...)
 
 	return ctx.Redirect(http.StatusTemporaryRedirect, url.URL) // HTTP CODE 307 IN ORDER NOT TO GET URLs CACHED
 }
@@ -55,24 +56,28 @@ func shortenURL(ctx echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	url, err := urlRepo.Create(qurl)
-	if err != nil {
-		if err == repo.ErrIntegrityViolation {
-			return echo.ErrBadRequest
+	var url model.URL
+	err = urlRepo.Transaction(ctx.Request().Context(), func(urlTxRepo *repo.Repo) error {
+		url, err = urlTxRepo.Create(ctx.Request().Context(), qurl)
+		if err != nil {
+			return err
 		}
-		ctx.Logger().Error(err)
-		return echo.ErrInternalServerError
-	}
 
-	if name == "" {
-		name, err = shortid.Encode(url.ID)
-	}
-	if err != nil {
-		ctx.Logger().Error(err)
-		return echo.ErrInternalServerError
-	}
+		if name == "" {
+			name, err = shortid.Encode(url.ID)
+		}
+		if err != nil {
+			return err
+		}
 
-	url, err = urlRepo.UpdateNameByID(url.ID, name)
+		url, err = urlTxRepo.UpdateNameByID(ctx.Request().Context(), url.ID, name)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		if err == repo.ErrIntegrityViolation {
 			return echo.ErrBadRequest
@@ -87,7 +92,7 @@ func shortenURL(ctx echo.Context) error {
 func deleteURL(ctx echo.Context) error {
 	name := ctx.Param("name")
 
-	url, err := urlRepo.DeleteByName(name)
+	url, err := urlRepo.DeleteByName(ctx.Request().Context(), name)
 	if err != nil {
 		if err == repo.ErrNoRows {
 			return echo.ErrBadRequest
@@ -111,7 +116,7 @@ func modifyURL(ctx echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	url, err := urlRepo.UpdateURLByName(name, qurl)
+	url, err := urlRepo.UpdateURLByName(ctx.Request().Context(), name, qurl)
 	if err != nil {
 		if err == repo.ErrNoRows || err == repo.ErrIntegrityViolation {
 			return echo.ErrBadRequest
@@ -131,7 +136,7 @@ func getURLStats(ctx echo.Context) error {
 	name := ctx.Param("name")
 	contentType := ctx.Request().Header.Get(echo.HeaderContentType)
 
-	url, err := urlRepo.GetByName(name)
+	url, err := urlRepo.GetByName(ctx.Request().Context(), name)
 	if err != nil {
 		if err == repo.ErrNoRows {
 			return echo.ErrNotFound
