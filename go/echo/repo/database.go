@@ -27,12 +27,15 @@ func connect(ctx context.Context, dsn string, retries int, logger pgx.Logger) (*
 	config.ConnConfig.Logger = logger
 	config.ConnConfig.LogLevel = pgx.LogLevelError
 
+	retry := 0
 	timeoutExceeded := time.After(timeout)
 	for {
 		select {
 		case <-timeoutExceeded:
 			return nil, errors.New("unable to connect to the database")
 		case <-delay.C:
+			retry++
+			logger.Log(ctx, pgx.LogLevelInfo, "trying to connect to the database", map[string]interface{}{"retry": retry})
 			db, err := pgxpool.ConnectConfig(ctx, config)
 			if err == nil {
 				return db, nil

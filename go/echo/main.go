@@ -155,13 +155,14 @@ func getURLStats(ctx echo.Context) error {
 
 func main() {
 	var err error
-	appLogger := logger.New("Shortr")
+	appLogger := logger.New("shortr")
 
-	urlRepo, err = repo.Connect(fmt.Sprintf("postgresql://%s:%s@%s:%d",
+	urlRepo, err = repo.Connect(fmt.Sprintf("postgresql://%s:%s@%s:%d/%s?sslmode=disable",
 		config.GetEnvAsString("DATABASE_USER", "postgres"),
 		config.GetEnvAsString("DATABASE_PASSWORD", "postgres"),
 		config.GetEnvAsString("DATABASE_HOST", "postgres"),
 		config.GetEnvAsInt("DATABASE_PORT", 5432),
+		config.GetEnvAsString("DATABASE_NAME", "postgres"),
 	), 5, logger.Database(appLogger))
 	if err != nil {
 		panic(err)
