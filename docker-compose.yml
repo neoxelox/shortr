@@ -96,6 +96,7 @@ services:
             DATABASE_USER: postgres
             DATABASE_PASSWORD: postgres
             DATABASE_NAME: postgres
+            DATABASE_SSLMODE: disable # Change to 'require' in production environment
             VIRTUAL_HOST: localhost
             LETSENCRYPT_HOST: localhost
             LETSENCRYPT_EMAIL: somebody@localhost.com

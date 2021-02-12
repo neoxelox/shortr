@@ -54,11 +54,11 @@ func hydrate(chr string) (int, error) {
 func dehydrate(dgt int) (string, error) {
 	switch {
 	case dgt < 10:
-		return string(dgt + 48), nil
+		return string(rune(dgt + 48)), nil
 	case dgt <= 35:
-		return string(dgt + 55), nil
+		return string(rune(dgt + 55)), nil
 	case dgt < 62:
-		return string(dgt + 61), nil
+		return string(rune(dgt + 61)), nil
 	default:
 		return "", fmt.Errorf("%d is not a valid integer", dgt)
 	}
